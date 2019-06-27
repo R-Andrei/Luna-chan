@@ -56,7 +56,6 @@ const main_message_listener = (instance) => {
     }
 }
 
-console.log('here');
 let ko = new Luna(token);
 ko.add_event_listener(main_message_listener(ko).bind(ko));
 
