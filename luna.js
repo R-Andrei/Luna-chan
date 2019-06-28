@@ -1,14 +1,15 @@
 const Discord = require('discord.js');
 const fs = require('fs');
+const moment = require('moment');
 const { prefix, token } = require('./config.json');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-
 
 class Luna {
     constructor(token) {
         this.client = new Discord.Client();
         this.abilities = new Discord.Collection();
+
+        this.database = require('./storage/luna_transactions');
 
         this.wake_up();
 
@@ -42,9 +43,24 @@ const main_message_listener = (instance) => {
                 if (instance.abilities.has(command)) {
                     const ability = instance.abilities.get(command);
                     ability.execute(msg, args)
-                        .then(result => console.log(`Succesfully used ability ${prefix}${ability.name} for user ${msg.author.tag}.\nResult on channel ${result.channel.name}\n`))
+                        .then(result => {
+                            console.log([
+                                `\n${moment(new Date(msg.createdTimestamp)).format('YYYY-MM-DD, h:mm:ss a')}: Succesfully used ability ${prefix}${ability.name} for user ${msg.author.tag}.`,
+                                `Result on channel '${result.channel.name}' ${(msg.guild) ? 'of guild ' + "'" + msg.guild.name + "'" : '\n' }`
+                            ].join('\n'));
+                            instance.database.worker.update_user(msg, [ability])
+                                .then(result => console.log(result))
+                                .catch(err => console.log(err));
+                        })
                         .catch(err => {
-                            console.log(`\n${new Date(Date.now())}: Error running command '${ability.name}' for user: ${msg.author.tag} on channel ${msg.channel.name}\nError info: ${err.message}`);
+                            console.log([
+                                `\n${moment(new Date(msg.createdTimestamp)).format('YYYY-MM-DD, h:mm:ss a')}: Error running`,
+                                `command '${ability.name}'`,
+                                `for user: ${msg.author.tag}`,
+                                `on channel '${msg.channel.name}'`,
+                                `${(msg.guild) ? 'of guild ' + "'" + msg.guild.name + "'" : '\n' }`,
+                                `Error info: ${err.message}`
+                            ].join(' '));
                             msg.reply('Woah that spectacularly didn\'t work out! Sure u were using it like this?');
                             msg.reply(`${prefix}${ability.name} ${ability.usage}`);
                         });
