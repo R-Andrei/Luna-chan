@@ -43,7 +43,7 @@ const main_message_listener = (instance) => {
                 if (instance.abilities.has(command)) {
                     const ability = instance.abilities.get(command);
                     try {
-                        (ability.args && args.length) ? ability.execute(instance, msg, args): ability.execute(instance, msg);
+                        ability.execute(msg, args)
                     } catch (err) {
                         console.log(`\n${new Date(Date.now())}: Error running command '${ability.name}' for user: ${msg.author.tag}\nError info: ${err.message}`);
                         msg.reply('Woah that spectacularly didn\'t work out! Sure u were using it like this?');
@@ -56,7 +56,7 @@ const main_message_listener = (instance) => {
 }
 
 let ko = new Luna(token);
-ko.add_event_listener(main_message_listener(ko).bind(ko));
+ko.add_event_listener(main_message_listener(ko));
 
 
 

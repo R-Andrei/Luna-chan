@@ -8,7 +8,7 @@ module.exports = {
     args: true,
     min_args: 1,
     usage: '<tag> <tag>...',
-    execute: (instance, message, args) => {
+    execute: (message, args) => {
         const base_url = 'https://tenor.com';
         const options = { uri: `https://tenor.com/search/${args.join('-')}-gifs`, transform: (body) => { return cheerio.load(body); } }
         rp(options).then(data => {
@@ -18,7 +18,7 @@ module.exports = {
                 const url = data(element).find('a').attr('href');
                 (url.startsWith('/view')) ? giflist.push(url): {};
             });
-            instance.client.channels.get(message.channel.id).send(`${base_url}${giflist[random]}`)
+            message.client.channels.get(message.channel.id).send(`${base_url}${giflist[random]}`)
                 .then(sent => {
                     console.log(`Sent gif to channel ${sent.channel.name}`);
                     return 0;

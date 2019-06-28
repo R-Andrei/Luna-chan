@@ -8,7 +8,7 @@ module.exports = {
     args: true,
     min_args: 1,
     usage: '@user_mention, or just !stats',
-    execute: (instance, message, args = []) => {
+    execute: (message, args = []) => {
         const target = (args.length) ? args[0].replace(/[\<\@\!\>]+/, '') : null;
         const member = (args.length) ? message.guild.members.find(user => user.id == target) : message.guild.members.find(user => user.id === message.author.id);
         const embed = new Discord.RichEmbed()
@@ -24,7 +24,7 @@ module.exports = {
             .addField('Crappy messages sent:', `coming soon`, true)
             .addField('Experience gained:', `coming soon`, true)
             .addBlankField()
-            .setFooter('put together by awesome me', `${instance.client.user.avatarURL}`)
+            .setFooter('put together by awesome me', `${message.client.user.avatarURL}`)
         message.reply(embed)
             .then(sent => { console.log(`Sent a reply to ${sent.author.tag}`); return 0; })
             .catch(err => { console.log(err); return -1; });
