@@ -42,6 +42,9 @@ const main_message_listener = (instance) => {
                 const command = args.shift().toLowerCase();
                 if (instance.abilities.has(command)) {
                     const ability = instance.abilities.get(command);
+                    if (ability.name == 'kys') instance.database.worker.close_connection()
+                        .then(response => console.log(response))
+                        .catch(err => console.log(err));
                     ability.execute(msg, args)
                         .then(result => {
                             console.log([

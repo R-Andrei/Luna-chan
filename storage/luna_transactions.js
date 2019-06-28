@@ -7,30 +7,48 @@ class StorageSlave{
         this.database = database;
         this.collection = collection;
         this.client = new MongoClient(`mongodb+srv://${user}:${token}@${address}/${database}/${collection}?retryWrites=true&w=majority`, { useNewUrlParser: true });
+        this.open_connection()
+            .then(console.log(`Connected to '${this.database}/${this.collection}' at '${this.address}'`))
+            .catch(err => {
+                console.log(err);
+            });
+    }
+
+    async open_connection () {
+        return new Promise((resolve, reject) => {
+            this.client.connect()
+                .then(result => resolve(result))
+                .catch(err => {reject(err); });
+        });
     }
 
     async update_user (message, args) {
         return new Promise((resolve, reject) => {
-            this.client.connect()
-                .then(result => {
-                    console.log(`Connected to '${this.database}/${this.collection}' at '${this.address}'`);
-
-                    const collection = result.db(this.database).collection(this.collection);
-                    collection.insertOne({
-                        user: message.author.tag,
-                        user_id: Number(message.author.id),
-                        channel: message.channel.name,
-                        server: message.guild.name,
-                        server_id: Number(message.guild.id),
-                        command: args[0].name,
-                        timestamp: message.createdTimestamp
-                    });
-
-                    this.client.close();
-                    resolve(`Transaction finished. Logging out of databse '${this.database}' at '${this.address}'.`);
+            const collection = this.client.db(this.database).collection(this.collection);
+            const data_set = {
+                user: message.author.tag,
+                user_id: Number(message.author.id),
+                channel: message.channel.name,
+                server: message.guild.name,
+                server_id: Number(message.guild.id),
+                command: args[0].name,
+                timestamp: message.createdTimestamp
+            };
+            collection.insertOne(data_set)
+                .then(_result => {
+                    resolve(`Transaction finished. Inserted data set (${Object.values(data_set).join(', ')})'.`);
                 })
-                .catch(err => { this.client.close(); reject(err); });
-        });
+                .catch(err => {reject(err);});
+        })
+    }
+
+    async close_connection() {
+        return new Promise((resolve, reject) => {
+            this.client.close()
+                .then(resolve(`Killed connection to database '${this.database}' of '${this.address}'`))
+                .catch(err => reject(err));
+        })
+        
     }
 }
 
