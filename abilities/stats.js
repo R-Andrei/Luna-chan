@@ -9,7 +9,7 @@ module.exports = {
     min_args: 1,
     usage: '@user_mention, or just !stats',
     execute: (instance, message, args = []) => {
-        if (args.length) const target = args[0].replace(/[\<\@\!\>]+/, '')
+        const target = (args.length) ? args[0].replace(/[\<\@\!\>]+/, '') : null;
         const member = (args.length) ? message.guild.members.find(user => user.id == target) : message.guild.members.find(user => user.id === message.author.id);
         const embed = new Discord.RichEmbed()
             .setColor(`${member.displayHexColor}`)
