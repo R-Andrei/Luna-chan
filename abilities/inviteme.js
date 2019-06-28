@@ -6,7 +6,7 @@ module.exports = {
     usage: '',
     execute: (message, args) => {
         return new Promise((resolve, reject) => {
-            if (args != []) message.reply(`What'd you give me those for? '${args.join(', ')}'`).catch(err => console.log(err));
+            if (args.length) message.reply(`What'd you give me those for? '${args.join(', ')}'`).catch(err => console.log(err));
             message.client.generateInvite(67611712).then(response => {
                 message.reply(response)
                     .then(sent => resolve(sent));

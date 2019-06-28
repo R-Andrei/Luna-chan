@@ -33,7 +33,6 @@ class Luna {
     }
 }
 
-
 const main_message_listener = (instance) => {
     return () => {
         instance.client.on('message', msg => {
@@ -43,9 +42,9 @@ const main_message_listener = (instance) => {
                 if (instance.abilities.has(command)) {
                     const ability = instance.abilities.get(command);
                     ability.execute(msg, args)
-                        .then(result => console.log(result))
+                        .then(result => console.log(`Succesfully used ability ${prefix}${ability.name} for user ${msg.author.tag}.\nResult on channel ${result.channel.name}\n`))
                         .catch(err => {
-                            console.log(`\n${new Date(Date.now())}: Error running command '${ability.name}' for user: ${msg.author.tag}\nError info: ${err.message}`);
+                            console.log(`\n${new Date(Date.now())}: Error running command '${ability.name}' for user: ${msg.author.tag} on channel ${msg.channel.name}\nError info: ${err.message}`);
                             msg.reply('Woah that spectacularly didn\'t work out! Sure u were using it like this?');
                             msg.reply(`${prefix}${ability.name} ${ability.usage}`);
                         });
