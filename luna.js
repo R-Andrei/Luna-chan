@@ -42,13 +42,13 @@ const main_message_listener = (instance) => {
                 const command = args.shift().toLowerCase();
                 if (instance.abilities.has(command)) {
                     const ability = instance.abilities.get(command);
-                    try {
-                        ability.execute(msg, args)
-                    } catch (err) {
-                        console.log(`\n${new Date(Date.now())}: Error running command '${ability.name}' for user: ${msg.author.tag}\nError info: ${err.message}`);
-                        msg.reply('Woah that spectacularly didn\'t work out! Sure u were using it like this?');
-                        msg.reply(`${prefix}${ability.name} ${ability.usage}`);
-                    }
+                    ability.execute(msg, args)
+                        .then(result => console.log(result))
+                        .catch(err => {
+                            console.log(`\n${new Date(Date.now())}: Error running command '${ability.name}' for user: ${msg.author.tag}\nError info: ${err.message}`);
+                            msg.reply('Woah that spectacularly didn\'t work out! Sure u were using it like this?');
+                            msg.reply(`${prefix}${ability.name} ${ability.usage}`);
+                        });
                 }
             }
         });
