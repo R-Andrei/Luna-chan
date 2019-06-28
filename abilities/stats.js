@@ -25,6 +25,8 @@ module.exports = {
             .addField('Experience gained:', `coming soon`, true)
             .addBlankField()
             .setFooter('put together by awesome me', `${instance.client.user.avatarURL}`)
-        return message.reply(embed);
+        message.reply(embed)
+            .then(sent => { console.log(`Sent a reply to ${sent.author.tag}`); return 0; })
+            .catch(err => { console.log(err); return -1; });
     }
 }

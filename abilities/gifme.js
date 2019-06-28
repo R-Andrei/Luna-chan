@@ -18,9 +18,11 @@ module.exports = {
                 const url = data(element).find('a').attr('href');
                 (url.startsWith('/view')) ? giflist.push(url): {};
             });
-            instance.client.channels.get(message.channel.id).send(`${base_url}${giflist[random]}`);
-        }).catch(_err => {
-            return message.reply(`Something didnt work out. :cry: ${_err}`);
-        });
+            instance.client.channels.get(message.channel.id).send(`${base_url}${giflist[random]}`)
+                .then(sent => {
+                    console.log(`Sent gif to channel ${sent.channel.name}`);
+                    return 0;
+                });
+        }).catch(err => { console.log(err); return -1 });
     }
 }

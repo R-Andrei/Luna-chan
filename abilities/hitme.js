@@ -16,10 +16,15 @@ module.exports = {
             data('.post .joke-body-wrap a').each((_index, element) => {
                 (data(element).find('dt').text().replace(/\s+/g, ' ').length > 1) ? jokelist.push({ setup: data(element).find('dt').text().replace(/\s+/g, ' '), punchline: data(element).find('dd').text().replace(/\s+/g, ' ') }): {};
             });
-            instance.client.channels.get(message.channel.id).send(jokelist[random].setup);
-            instance.client.channels.get(message.channel.id).send(jokelist[random].punchline);
-        }).catch(_err => {
-            return message.reply(`Woah that went badly..${_err}`)
-        });
+            instance.client.channels.get(message.channel.id).send(jokelist[random].setup)
+                .then(sent => {
+                    console.log(`Sent message to channel ${sent.channel.name}`);
+                    instance.client.channels.get(message.channel.id).send(jokelist[random].punchline)
+                        .then(sent => {
+                            console.log(`Sent message to channel ${sent.channel.name}`);
+                            return 0;
+                        });
+                });
+        }).catch(err => { console.log(err); return -1; });
     }
 }

@@ -6,9 +6,11 @@ module.exports = {
     usage: '',
     execute: (instance, message) => {
         instance.client.generateInvite(67611712).then(response => {
-            return message.reply(response);
-        }).catch(err => {
-            return message.reply(`Oops! Something didn't work out. ${err}`)
-        });
+            message.reply(response)
+                .then(sent => {
+                    console.log(`Sent reply to ${sent.author.tag}.`);
+                    return 0;
+                });
+        }).catch(err => { console.log(err); return -1; });
     }
 }

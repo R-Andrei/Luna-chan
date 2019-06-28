@@ -7,6 +7,14 @@ module.exports = {
     execute: (instance, message, args = []) => {
         const target = (args.length) ? args[0].replace(/[\<\@\!\>]+/, '') : null;
         const avatar = (args.length) ? `${instance.client.users.find(user => user.id == target).avatarURL}?size=2048` : `${message.author.avatarURL}?size=2048`;
-        return message.reply(avatar)
+        message.reply(avatar)
+            .then(sent => {
+                console.log(`Sent an avatar to ${sent.author.tag}`);
+                return 0;
+            })
+            .catch(err => {
+                console.log(err);
+                return -1
+            });
     }
 }
