@@ -9,16 +9,15 @@ class Luna {
     constructor(token) {
         this.client = new Discord.Client();
         this.abilities = new Discord.Collection();
-        this.available_channels = this.client.channels.map(channel => channel.name);
 
         this.wake_up();
-
-        try { this.client.login(token); } catch (err) { console.log(err.message); }
 
         this.client.on('ready', () => {
             console.log(`Logged in as ${this.client.user.tag}!`);
             this.client.user.setActivity('with your feelings');
         });
+
+        try { this.client.login(token); } catch (err) { console.log(err.message); }
     }
 
     wake_up() {
