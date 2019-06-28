@@ -28,6 +28,6 @@ module.exports = {
             .addField('Experience gained:', `coming soon`, true)
             .addBlankField()
             .setFooter('put together by awesome me', `${instance.client.user.avatarURL}`)
-        message.reply(embed);
+        return message.reply(embed);
     }
 }

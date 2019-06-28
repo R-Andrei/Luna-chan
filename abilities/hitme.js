@@ -19,7 +19,7 @@ module.exports = {
             instance.client.channels.get(message.channel.id).send(jokelist[random].setup);
             instance.client.channels.get(message.channel.id).send(jokelist[random].punchline);
         }).catch(_err => {
-            message.reply(`Woah that went badly..${_err}`)
+            return message.reply(`Woah that went badly..${_err}`)
         });
     }
 }

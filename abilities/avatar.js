@@ -15,6 +15,6 @@ module.exports = {
         }
         console.log(target);
         const avatar = (args.length) ? `${instance.client.users.find(user => user.id == target).avatarURL}?size=2048` : `${message.author.avatarURL}?size=2048`;
-        message.reply(avatar)
+        return message.reply(avatar)
     }
 }

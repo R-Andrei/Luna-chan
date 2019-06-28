@@ -20,7 +20,7 @@ module.exports = {
             });
             instance.client.channels.get(message.channel.id).send(`${base_url}${giflist[random]}`);
         }).catch(_err => {
-            message.reply(`Something didnt work out. :cry: ${_err}`);
+            return message.reply(`Something didnt work out. :cry: ${_err}`);
         });
     }
 }

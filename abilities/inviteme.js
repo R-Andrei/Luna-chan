@@ -6,9 +6,9 @@ module.exports = {
     usage: '',
     execute: (instance, message) => {
         instance.client.generateInvite(67611712).then(response => {
-            message.reply(response);
+            return message.reply(response);
         }).catch(err => {
-            message.reply(`Oops! Something didn't work out. ${err}`)
+            return message.reply(`Oops! Something didn't work out. ${err}`)
         });
     }
 }

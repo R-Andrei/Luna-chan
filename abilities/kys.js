@@ -5,6 +5,6 @@ module.exports = {
     min_args: 0,
     usage: '',
     execute: (_instance, message) => {
-        message.reply('Hold on im gonna go kms.').then(process.exit());;
+        return message.reply('Hold on im gonna go kms.').then(process.exit());;
     }
 }
