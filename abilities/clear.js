@@ -4,7 +4,7 @@ module.exports = {
     args: true,
     min_args: 1,
     usage: '',
-    execute: (message, args = []) => {
+    execute: async (message, args = []) => {
         return new Promise((resolve, reject) => {
 
         });

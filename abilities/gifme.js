@@ -8,7 +8,7 @@ module.exports = {
     args: true,
     min_args: 1,
     usage: '<tag> <tag>...',
-    execute: (message, args) => {
+    execute: async (message, args) => {
         return new Promise((resolve, reject) => {
             const base_url = 'https://tenor.com';
             const options = { uri: `https://tenor.com/search/${args.join('-')}-gifs`, transform: (body) => { return cheerio.load(body); } }

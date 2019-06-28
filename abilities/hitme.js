@@ -8,7 +8,7 @@ module.exports = {
     args: false,
     min_args: 0,
     usage: '',
-    execute: (message, args) => {
+    execute: async (message, args) => {
         return new Promise((resolve, reject) => {
             if (args.length) message.reply(`What'd you give me those for? '${args.join(', ')}'`).catch(err => console.log(err));
             const options = { uri: 'https://www.goodbadjokes.com/', transform: (body) => { return cheerio.load(body); } }

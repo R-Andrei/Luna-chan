@@ -8,7 +8,7 @@ module.exports = {
     args: true,
     min_args: 1,
     usage: '@user_mention, or just !stats',
-    execute: (message, args = []) => {
+    execute: async (message, args = []) => {
         return new Promise((resolve, reject) => {
             const target = (args.length) ? args[0].replace(/[\<\@\!\>]+/g, '') : null;
             const member = (args.length) ? message.guild.members.find(user => user.id == target) : message.guild.members.find(user => user.id === message.author.id);

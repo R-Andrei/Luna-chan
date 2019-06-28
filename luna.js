@@ -8,11 +8,8 @@ class Luna {
     constructor(token) {
         this.client = new Discord.Client();
         this.abilities = new Discord.Collection();
-
-        this.database = require('./storage/luna_transactions');
-
+        this.storage = require('./storage/luna_transactions');
         this.wake_up();
-
         this.client.on('ready', () => {
             console.log(`Logged in as ${this.client.user.tag}!`);
             this.client.user.setActivity('with your feelings');
@@ -42,30 +39,31 @@ const main_message_listener = (instance) => {
                 const command = args.shift().toLowerCase();
                 if (instance.abilities.has(command)) {
                     const ability = instance.abilities.get(command);
-                    if (ability.name == 'kys') instance.database.worker.close_connection()
-                        .then(response => console.log(response))
+                    if (ability.name == 'kys') instance.storage.worker.close_connection()
+                        .then(result => console.log(result))
                         .catch(err => console.log(err));
                     ability.execute(msg, args)
                         .then(result => {
                             console.log([
-                                `\n${moment(new Date(msg.createdTimestamp)).format('YYYY-MM-DD, h:mm:ss a')}: Succesfully used ability ${prefix}${ability.name} for user ${msg.author.tag}.`,
-                                `Result on channel '${result.channel.name}' ${(msg.guild) ? 'of guild ' + "'" + msg.guild.name + "'" : '\n' }`
-                            ].join('\n'));
-                            instance.database.worker.update_user(msg, [ability])
-                                .then(result => console.log(result))
-                                .catch(err => console.log(err));
+                                `\n${moment(new Date(msg.createdTimestamp)).format('YYYY-MM-DD, h:mm:ss a')}:`,
+                                `Succesfully casted ability ${prefix}${ability.name} for user ${msg.author.tag}.`,
+                                `\nResult on channel '${result.channel.name}' ${(msg.guild) ? 'of guild ' + "'" + msg.guild.name + "'" : '\n' }`
+                            ].join(' '));
+                            instance.storage.worker.push_row(msg, ability)
+                                .then(result => console.log(result));
                         })
                         .catch(err => {
                             console.log([
-                                `\n${moment(new Date(msg.createdTimestamp)).format('YYYY-MM-DD, h:mm:ss a')}: Error running`,
-                                `command '${ability.name}'`,
+                                `\n${moment(new Date(msg.createdTimestamp)).format('YYYY-MM-DD, h:mm:ss a')}: Error casting`,
+                                `ability '${ability.name}'`,
                                 `for user: ${msg.author.tag}`,
                                 `on channel '${msg.channel.name}'`,
                                 `${(msg.guild) ? 'of guild ' + "'" + msg.guild.name + "'" : '\n' }`,
                                 `Error info: ${err.message}`
                             ].join(' '));
-                            msg.reply('Woah that spectacularly didn\'t work out! Sure u were using it like this?');
-                            msg.reply(`${prefix}${ability.name} ${ability.usage}`);
+                            msg.reply('Woah that spectacularly didn\'t work out! Sure u were using it like this?')
+                                .then(msg.reply(`${prefix}${ability.name} ${ability.usage}`))
+                                .catch(err => console.log(err));
                         });
                 }
             }
