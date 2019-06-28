@@ -45,7 +45,7 @@ class StorageWorker {
     async close_connection() {
         return new Promise((resolve, reject) => {
             this.client.close()
-                .then(resolve(`Killed connection to database '${this.database}' of '${this.address}'`))
+                .then(resolve(`\nKilled connection to database '${this.database}' of '${this.address}'`))
                 .catch(err => reject(err));
         });
     }

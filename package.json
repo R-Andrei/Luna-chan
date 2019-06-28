@@ -2,9 +2,9 @@
   "name": "luna-chan",
   "version": "1.0.0",
   "description": "",
-  "main": "luna.js",
+  "main": "run.js",
   "scripts": {
-    "start": "node luna.js"
+    "start": "node run.js"
   },
   "repository": {
     "type": "git",
