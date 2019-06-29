@@ -13,7 +13,6 @@ module.exports = {
                     process.exit();
                 })
                 .catch(err => reject(err));
-        })
-
+        });
     }
 }

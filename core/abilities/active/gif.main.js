@@ -23,6 +23,5 @@ module.exports = {
                     .then(sent => resolve(sent));
             }).catch(err => reject(err));
         });
-
     }
 }

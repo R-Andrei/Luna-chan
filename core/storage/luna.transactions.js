@@ -2,14 +2,10 @@ const MongoClient = require('mongodb').MongoClient;
 
 
 module.exports = class StorageWorker {
-    constructor (address, database, collections, user, token) {
+    constructor (user, token, address, database, collections) {
         this.address = address;
         this.database = database;
-        this.collections = {
-            user_base: collections.user_base,
-            server_base: collections.server_base,
-            server_experience: collections.server_experience
-        };
+        this.collections = collections
         this.client = new MongoClient(`mongodb+srv://${user}:${token}@${address}/${database}/?retryWrites=true&w=majority`, { useNewUrlParser: true });
     }
 
