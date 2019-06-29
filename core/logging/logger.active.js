@@ -16,7 +16,7 @@ module.exports = class Logger {
         }
     }
 
-    log_error (message, ability, action, error) {
+    log_ability_error (message, ability, action, error) {
         console.log([
             `\n${moment(new Date(message.createdTimestamp)).format('YYYY-MM-DD, h:mm:ss a')}:`,
             `Error ${this.actions[action].activity} ${this.actions[action].subject}`,
@@ -26,7 +26,7 @@ module.exports = class Logger {
         ].join(' '));
     }
 
-    log_success (result, message, ability) {
+    log_ability_success (result, message, ability) {
         console.log([
             `\n${moment(new Date(message.createdTimestamp)).format('YYYY-MM-DD, h:mm:ss a')}:`,
             `Succesfully casted ability ${prefix}${ability.name} for user ${message.author.tag}.`,

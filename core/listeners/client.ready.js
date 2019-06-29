@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'ready.main',
+    name: 'client.ready',
     description: 'Listener for ready login event.',
     body: (instance) => {
         return () => {
