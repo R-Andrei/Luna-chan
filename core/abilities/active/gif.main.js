@@ -7,7 +7,8 @@ module.exports = {
     description: 'Sends poor quality jifs.',
     args: true,
     min_args: 1,
-    usage: '<tag> <tag>...',
+    usage: '<tags> <*separated by spaces>',
+    type: 'main',
     execute: async (message, args) => {
         return new Promise((resolve, reject) => {
             const base_url = 'https://tenor.com';

@@ -4,6 +4,7 @@ module.exports = {
     args: true,
     min_args: 1,
     usage: '@user_mention, or just !avatar',
+    type: 'main',
     execute: async (message, args = []) => {
         return new Promise((resolve, reject) => {
             const target = (args.length) ? args[0].replace(/[\<\@\!\>]+/g, '') : null;

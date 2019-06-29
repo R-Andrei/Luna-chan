@@ -7,9 +7,10 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
 module.exports = class Luna {
-    constructor() {
+    constructor () {
         this.client = new Discord.Client();
-        this.abilities = new Discord.Collection();
+        this.actives = new Discord.Collection();
+        this.passives = new Discord.Collection();
         this.logger = new Logger();
         this.storage = new StorageWorker(cloud.user, cloud.key, cloud.address, cloud.database, cloud.collections);
         this.init_listeners();
@@ -18,18 +19,18 @@ module.exports = class Luna {
 
     wake_up () {
         this.storage.open_connection()
-            .then(_result => {
-                console.log(`Connected to '${this.storage.database}' at '${this.storage.address}'`);
+            .then(result => {
+                console.log(result);
                 this.client.login(token);
             })
             .catch(err => console.log(err));
     }
 
     init_abilities () {
-        const abilities = fs.readdirSync('./core/abilities/active').filter(file => file.endsWith('main.js'));
+        const abilities = fs.readdirSync('./core/abilities/active').filter(file => file.endsWith('.js'));
         for (const ability_file of abilities) {
             const ability = require(`./abilities/active/${ability_file}`);
-            this.abilities.set(ability.name, ability);
+            this.actives.set(ability.name, ability);
         }
     }
 
