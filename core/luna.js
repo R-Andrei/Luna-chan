@@ -100,20 +100,6 @@ const channel_or_user = (target_channel, new_channel) => {
     return (target_channel.indexOf('@') === 0 || target_channel.indexOf('#') > 0) ? [(target_channel.indexOf('@') === 0) ? this.client.users.find(user => user.tag === target_channel.substring(1)) : this.client.users.find(user => user.tag === target_channel), 'user'] : [new_channel, type];
 }
 
-const set_fake_private_message_listener = (instance) => {
-    instance.client.on('message', msg => {
-        if (msg.author.tag === 'Fake#1000' && msg.channel.id === '588668921075335178') {
-            if (msg.content === '!!terminate') {}
-            if (msg.content.charAt(0) === '!') {
-                let split = msg.content.split(' ');
-
-
-            } else if (fake_listener === 'on') {
-                (msg.content.charAt(0) === '\\') ? send_fake_message(client, msg.content.substring(1)): send_fake_message(client, msg.content);
-            }
-        }
-    });
-}
 
 set_channel(message, target_channel) {
     var [new_channel, type] = (this.available_channels.indexOf(target_channel) >= 0) ? [this.client.channels.find(channel => channel.name === target_channel), 'channel'] : [null, null];
