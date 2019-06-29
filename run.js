@@ -3,6 +3,8 @@
 /*          MOST OF THAT WILL END UP HERE            */
 /*****************************************************/
 
-const { luna } = require('./core/luna.js')
+const { token } = require('./core/config.json');
+const Luna = require('./core/luna.js');
 
-luna.wake_up();
+luna = new Luna();
+luna.wake_up(token);

@@ -1,8 +1,8 @@
 const MongoClient = require('mongodb').MongoClient;
-const { cloud } = require('../config.json');
 
-class StorageWorker {
-    constructor(address, database, collections, user, token){
+
+module.exports = class StorageWorker {
+    constructor (address, database, collections, user, token) {
         this.address = address;
         this.database = database;
         this.collections = {
@@ -11,9 +11,6 @@ class StorageWorker {
             server_experience: collections.server_experience
         };
         this.client = new MongoClient(`mongodb+srv://${user}:${token}@${address}/${database}/?retryWrites=true&w=majority`, { useNewUrlParser: true });
-        this.open_connection()
-            .then(console.log(`Connected to '${this.database}' at '${this.address}'`))
-            .catch(err => console.log(err));
     }
 
     async open_connection () {
@@ -42,7 +39,7 @@ class StorageWorker {
         });
     }
 
-    async close_connection() {
+    async close_connection () {
         return new Promise((resolve, reject) => {
             this.client.close()
                 .then(resolve(`\nKilled connection to database '${this.database}' of '${this.address}'`))
@@ -51,8 +48,3 @@ class StorageWorker {
     }
 }
 
-const luna_worker = new StorageWorker(cloud.address, cloud.database, cloud.collections, cloud.user, cloud.key);
-
-module.exports = {
-    worker: luna_worker
-};

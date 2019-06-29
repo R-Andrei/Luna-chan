@@ -1,42 +1,50 @@
 const Discord = require('discord.js');
-const { token } = require('./config.json');
+const StorageWorker = require('./storage/luna.transactions');
+const { cloud } = require('./config.json');
 const fs = require('fs');
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
-class Luna {
-    constructor(token) {
+
+
+module.exports = class Luna {
+    constructor() {
         this.client = new Discord.Client();
         this.abilities = new Discord.Collection();
-        this.storage = require('./storage/luna.transactions');
-        this.client.on('ready', () => {
-            console.log(`Logged in as ${this.client.user.tag}!`);
-            this.client.user.setActivity('with your feelings');
-        });
+        this.storage = new StorageWorker(cloud.address, cloud.database, cloud.collections, cloud.user, cloud.key);
+        this.init_listeners();
+        this.init_abilities();
     }
 
-    wake_up() {
-        const listeners = fs.readdirSync('./core/listeners').filter(file => file.endsWith('.js'));
+    wake_up (token) {
+        this.storage.open_connection()
+            .then(_result => {
+                console.log(`Connected to '${this.storage.database}' at '${this.storage.address}'`);
+                this.client.login(token);
+            })
+            .catch(err => console.log(err));
+    }
+
+    init_abilities () {
         const abilities = fs.readdirSync('./core/abilities').filter(file => file.endsWith('.js'));
         for (const ability_file of abilities) {
             const ability = require(`./abilities/${ability_file}`);
             this.abilities.set(ability.name, ability);
         }
+    }
+
+    init_listeners () {
+        const listeners = fs.readdirSync('./core/listeners').filter(file => file.endsWith('.js'));
         for (const listener_file of listeners) {
             const listener = require(`./listeners/${listener_file}`);
             this.add_event_listener(listener.body(this));
         }
-        try { this.client.login(token); } catch (err) { console.log(err.message); }
     }
 
-    add_event_listener(listener) {
-        listener();
-    }
+    add_event_listener (listener) { listener(); }
+
 }
 
-module.exports = {
-    luna: new Luna(token)
-}
 
 
 

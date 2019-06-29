@@ -3,7 +3,7 @@ const { prefix } = require('../config.json');
 
 
 module.exports = {
-    name: 'main_listener',
+    name: 'abilities.main',
     description: 'Main message listener. Used by all users for commands.',
     body: (instance) => {
         return () => {
