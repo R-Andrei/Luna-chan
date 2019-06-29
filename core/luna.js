@@ -27,10 +27,15 @@ module.exports = class Luna {
     }
 
     init_abilities () {
-        const abilities = fs.readdirSync('./core/abilities/active').filter(file => file.endsWith('.js'));
-        for (const ability_file of abilities) {
+        const actives = fs.readdirSync('./core/abilities/active').filter(file => file.endsWith('.js'));
+        const passives = fs.readdirSync('./core/abilities/passive').filter(file => file.endsWith('.js'));
+        for (const ability_file of actives) {
             const ability = require(`./abilities/active/${ability_file}`);
             this.actives.set(ability.name, ability);
+        }
+        for (const ability_file of passives) {
+            const ability = require(`./abilities/passive/${ability_file}`);
+            this.passives.set(ability.name, ability);
         }
     }
 
