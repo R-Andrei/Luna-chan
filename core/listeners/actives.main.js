@@ -1,7 +1,7 @@
 const { prefix } = require('../prefixes.json');
 
 module.exports = {
-    name: 'abilities.main',
+    name: 'actives.main',
     description: 'Main message listener. Used by all users for commands.',
     body: (instance) => {
         return () => {

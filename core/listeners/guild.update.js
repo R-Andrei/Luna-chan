@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'guild.join',
+    name: 'guild.update',
     description: 'Listener for ready login event.',
     body: (instance) => {
         return () => {

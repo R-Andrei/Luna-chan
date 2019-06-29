@@ -1,5 +1,5 @@
 module.exports = {
-    name: 'ready.main',
+    name: 'actives.fake',
     description: 'Listener for ready login event.',
     body: (instance) => {
         return () => {
