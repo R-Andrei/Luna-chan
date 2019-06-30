@@ -7,6 +7,7 @@ module.exports = {
                 if (msg.mentions.everyone) instance.passives.get('reee').execute(msg)
                     .then(result => console.log(result))
                     .catch(err => instance.logger.log(msg, ability, 'transaction', err));
+                
             });
         }
     }

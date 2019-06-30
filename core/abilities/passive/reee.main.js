@@ -7,13 +7,11 @@ module.exports = {
     type: 'main',
     execute: async (message) => {
         return new Promise((resolve, reject) => {
-            message.react('regional_indicator_r')
-            .then(message.react('regional_indicator_e')
-                .then(message.react('exclamation')
-                    .then(resolve(`Successfully reacted to ${message.author.tag}'s mention of everyone.`))
+            message.react('\u{1F621}')
+                .then(message.channel.send(`Reee. Was that necessary :unamused:`)
+                    .then(resolve('Done'))
                     .catch(err => reject(err))
-                ).catch(err => reject(err))
-            ).catch(err => reject(err))
+                ).catch(err => reject(err));   
         });
     }
 }
