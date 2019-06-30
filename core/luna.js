@@ -1,34 +1,34 @@
-const Discord = require('discord.js');
-const StorageWorker = require('./storage/luna.transactions');
-const Logger = require('./logging/logger.active');
-const { cloud, token } = require('./config.json');
-const fs = require('fs');
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+const discord_js_1 = require("discord.js");
+const luna_transactions_1 = __importDefault(require("./storage/luna.transactions"));
+const logger_active_1 = __importDefault(require("./logging/logger.active"));
+const config_json_1 = require("./config.json");
+const fs_1 = __importDefault(require("fs"));
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
-
-
-module.exports = class Luna {
-    constructor () {
-        this.client = new Discord.Client();
-        this.actives = new Discord.Collection();
-        this.passives = new Discord.Collection();
-        this.logger = new Logger();
-        this.storage = new StorageWorker(cloud.user, cloud.key, cloud.address, cloud.database, cloud.collections);
+class Luna {
+    constructor() {
+        this.client = new discord_js_1.Client();
+        this.actives = new discord_js_1.Collection();
+        this.passives = new discord_js_1.Collection();
+        this.logger = new logger_active_1.default();
+        this.storage = new luna_transactions_1.default(config_json_1.cloud.user, config_json_1.cloud.key, config_json_1.cloud.address, config_json_1.cloud.database, config_json_1.cloud.collections);
         this.init_listeners();
         this.init_abilities();
     }
-
-    wake_up () {
+    wake_up() {
         this.storage.open_connection()
-            .then(result => {
-                console.log(result);
-                this.client.login(token);
-            })
-            .catch(err => console.log(err));
+            .then((result) => {
+            console.log(result);
+            this.client.login(config_json_1.token);
+        })
+            .catch((err) => console.log(err));
     }
-
-    init_abilities () {
-        const actives = fs.readdirSync('./core/abilities/active').filter(file => file.endsWith('.js'));
-        const passives = fs.readdirSync('./core/abilities/passive').filter(file => file.endsWith('.js'));
+    init_abilities() {
+        const actives = fs_1.default.readdirSync('./core/abilities/active').filter(file => file.endsWith('.js'));
+        const passives = fs_1.default.readdirSync('./core/abilities/passive').filter(file => file.endsWith('.js'));
         for (const ability_file of actives) {
             const ability = require(`./abilities/active/${ability_file}`);
             this.actives.set(ability.name, ability);
@@ -38,25 +38,16 @@ module.exports = class Luna {
             this.passives.set(ability.name, ability);
         }
     }
-
-    init_listeners () {
-        const listeners = fs.readdirSync('./core/listeners').filter(file => file.endsWith('.js'));
+    init_listeners() {
+        const listeners = fs_1.default.readdirSync('./core/listeners').filter(file => file.endsWith('.js'));
         for (const listener_file of listeners) {
             const listener = require(`./listeners/${listener_file}`);
             this.add_event_listener(listener.body(this));
         }
     }
-
-    add_event_listener (listener) { listener(); }
-
+    add_event_listener(listener) { listener(); }
 }
-
-
-
-
-
-
-
+module.exports = Luna;
 /*
 //fake private listener
 var private_commands = {
@@ -120,4 +111,4 @@ set_channel(message, target_channel) {
         message.channel.send('Kyuu~ Done. :3');
     }
 }
-*/
+*/ 

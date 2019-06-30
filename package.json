@@ -4,7 +4,8 @@
   "description": "",
   "main": "run.js",
   "scripts": {
-    "start": "node run.js"
+    "compile": "tsc && node run.js",
+    "dev": "nodemon -e ts --exec \"npm run compile\""
   },
   "repository": {
     "type": "git",
@@ -25,5 +26,8 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/mongodb": "^3.1.28"
   }
 }

@@ -1,2 +1,4 @@
+*.js
+core/*.js
 core/config.json
 *.yml
