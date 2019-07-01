@@ -4,7 +4,6 @@ import { StorageWorker } from './storage/luna.transactions';
 import { Logger } from './logging/logger.active';
 import fs from 'fs';
 import { Ability } from './abilities/template.ability.js';
-import { Listener } from './listeners/template.listener.js';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
@@ -15,10 +14,12 @@ export class Luna {
     public storage: StorageWorker = new StorageWorker(cloud.user, cloud.key, cloud.address, cloud.database, cloud.collections);
     constructor () {
         this.init_listeners();
+        
         this.init_abilities();
     }
 
     wake_up(): void {
+        console.log('here');
         // this.storage.open_connection()
         //     .then((result: string) => {
         //         console.log(result);
@@ -29,21 +30,22 @@ export class Luna {
     }
 
     init_abilities(): void {
-        const abilities: string[] = fs.readdirSync('./core/abilities');
+        const abilities: string[] = fs.readdirSync('./core/abilities').filter(file => {return (file.endsWith('.ts') && !file.startsWith('template'))});
         for (let ability_file of abilities) {
-            import(`./abilities/${ability_file}`)
+            import(`./abilities/${ability_file.replace(/.ts/, '')}`)
                 .then(file => {
-                    this.abilities.set(file.ability.name, file.ability) 
+                    this.abilities.set(file.ability.name, file.ability);
                 })
                 .catch((err: Error) => console.log(err));
         }
     }
 
     init_listeners(): void {
-        const listeners: string[] = fs.readdirSync('./core/listeners');
+        const listeners: string[] = fs.readdirSync('./core/listeners').filter(file => {return (file.endsWith('.ts') && !file.startsWith('template'))});
         for (let listener_file of listeners) {
-            import(`./listeners/${listener_file}`)
+            import(`./listeners/${listener_file.replace(/.ts/, '')}`)
                 .then(file => {
+                    console.log(file.listener);
                     this.add_event_listener(file.listener.body(this));
                 })
                 .catch((err: Error) => console.log(err));

@@ -6,12 +6,12 @@ import { main } from '../types.js';
 import { Message } from 'discord.js';
 
 
-class ActiveMain extends Listener {
+class ActiveMain implements Listener {
+    public name: string = 'actives.main';
+    public description: string = 'Main message listener. Used by all users for commands.';
+    public body: (instance: Luna) => () => void;
     constructor() {
-        super();
-        this.name = 'actives.main';
-        this.description = 'Main message listener. Used by all users for commands.';
-        this.body = (instance: Luna) => {
+        this.body = (instance) => {
             return () => {
                 instance.client.on('message', msg => {
                     if (msg.content.startsWith(prefix) && !msg.author.bot) {

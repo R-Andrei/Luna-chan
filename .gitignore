@@ -6,4 +6,5 @@ core/storage/*.js
 core/listeners/*.js
 core/abilities/*.js
 compiled/
+!compiled/.gitkeep
 *.yml
