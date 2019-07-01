@@ -19,20 +19,20 @@ export class Luna {
     }
 
     wake_up(): void {
-        console.log('here');
-        // this.storage.open_connection()
-        //     .then((result: string) => {
-        //         console.log(result);
-                
-        //     })
-        //     .catch((err: Error) => console.log(err));
-        this.client.login(token);
+        this.storage.open_connection()
+            .then((result: string) => {
+                console.log(result);
+            this.client.login(token);
+        })
+        .catch((err: Error) => console.log(err));
+        
     }
 
     init_abilities(): void {
-        const abilities: string[] = fs.readdirSync('./core/abilities').filter(file => {return (file.endsWith('.ts') && !file.startsWith('template'))});
+        const abilities: string[] = fs.readdirSync('./core/abilities')
+            .filter((file: string) => { return (file.endsWith('.ts') && !file.startsWith('template')) });
         for (let ability_file of abilities) {
-            import(`./abilities/${ability_file.replace(/.ts/, '')}`)
+            import(`./abilities/${ability_file.replace(/\.ts$/s, '')}`)
                 .then(file => {
                     this.abilities.set(file.ability.name, file.ability);
                 })
@@ -41,11 +41,11 @@ export class Luna {
     }
 
     init_listeners(): void {
-        const listeners: string[] = fs.readdirSync('./core/listeners').filter(file => {return (file.endsWith('.ts') && !file.startsWith('template'))});
+        const listeners: string[] = fs.readdirSync('./core/listeners')
+            .filter((file: string) => { return (file.endsWith('.ts') && !file.startsWith('template')) });
         for (let listener_file of listeners) {
-            import(`./listeners/${listener_file.replace(/.ts/, '')}`)
+            import(`./listeners/${listener_file.replace(/\.ts$/s, '')}`)
                 .then(file => {
-                    console.log(file.listener);
                     this.add_event_listener(file.listener.body(this));
                 })
                 .catch((err: Error) => console.log(err));

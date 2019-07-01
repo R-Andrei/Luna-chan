@@ -15,7 +15,6 @@ class Avatar implements Ability {
         this.type = active;
         this.subtype = main;
         this.execute = async (message, ...args): Promise<Message|Message[]> => {
-            console.log(args);
             return new Promise((resolve, reject) => {
                 const target: string = (args.length) ? args[0].replace(/[\<\@\!\>]+/g, '') : null;
                 const avatar: string = (args.length) ? `${message.client.users.find(user => user.id == target).avatarURL}?size=2048` : `${message.author.avatarURL}?size=2048`;
