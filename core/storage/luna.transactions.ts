@@ -1,5 +1,6 @@
 import { Generic, SetServerRecord, AbilityRecord } from '../types'
-import { Message, TextChannel, DMChannel, GroupDMChannel } from 'discord.js';
+import { Message, TextChannel, DMChannel, GroupDMChannel, Guild } from 'discord.js';
+import { Ability } from '../abilities/template.ability';
 import Mongo from 'mongodb';
 
 
@@ -23,11 +24,11 @@ export class StorageWorker {
                     this.database = this.client.db(this.database_name);
                     resolve(`Connected to '${this.database_name}' at '${this.address}'`);
                 })
-                .catch((err: any) => reject(err));
+                .catch((err: Error) => reject(err));
         });
     }
 
-    async record_cast (message: Message, ability: any): Promise<string> {
+    async update_ability (message: Message, ability: Ability): Promise<string> {
         const text_channel: TextChannel | DMChannel| GroupDMChannel = message.channel
         if (text_channel instanceof DMChannel || text_channel instanceof GroupDMChannel) return
         return new Promise((resolve, reject) => {
@@ -52,7 +53,7 @@ export class StorageWorker {
         });
     }
 
-    async update_server (server: any, record_type: any): Promise<string> {
+    async update_server (server: Guild, record_type: string): Promise<string> {
         const collection = this.database.collection(this.collections.servers);
         return new Promise((resolve, reject) => {
             const data_set: SetServerRecord = { $set :{

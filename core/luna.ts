@@ -3,13 +3,14 @@ import { cloud, token } from './config.json';
 import { StorageWorker } from './storage/luna.transactions';
 import { Logger } from './logging/logger.active';
 import fs from 'fs';
+import { Ability } from './abilities/template.ability.js';
+import { Listener } from './listeners/template.listener.js';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
 export class Luna {
-    private client: Client = new Client();
-    public actives: Collection<Snowflake,{}> = new Collection();
-    public passives: Collection<Snowflake,{}> = new Collection();
+    public client: Client = new Client();
+    public abilities: Collection<Snowflake, Ability> = new Collection(); //TODO user ability class
     public logger: Logger = new Logger(); //TODO make logger private
     public storage: StorageWorker = new StorageWorker(cloud.user, cloud.key, cloud.address, cloud.database, cloud.collections);
     constructor () {
@@ -23,36 +24,49 @@ export class Luna {
         //         console.log(result);
                 
         //     })
-        //     .catch((err: any) => console.log(err));
+        //     .catch((err: Error) => console.log(err));
         this.client.login(token);
     }
 
     init_abilities(): void {
-        const actives: string[] = fs.readdirSync('./core/abilities/active').filter(file => file.endsWith('.js'));
-        const passives: string[] = fs.readdirSync('./core/abilities/passive').filter(file => file.endsWith('.js'));
-        for (let ability_file of actives) {
-            const ability = require(`./abilities/active/${ability_file}`);
-            this.actives.set(ability.name, ability);
-        }
-        for (let ability_file of passives) {
-            const ability = require(`./abilities/passive/${ability_file}`);
-            this.passives.set(ability.name, ability);
+        const abilities: string[] = fs.readdirSync('./core/abilities').filter(file => file.endsWith('.ts'));
+        for (let ability_file of abilities) {
+            import(`./abilities/${ability_file}`)
+                .then((ability: Ability) => {
+                    this.abilities.set(ability.name, ability) 
+                })
+                .catch((err: Error) => console.log(err));
         }
     }
 
+
     init_listeners(): void {
-        const listeners: string[] = fs.readdirSync('./core/listeners').filter(file => file.endsWith('.js'));
+        const listeners: string[] = fs.readdirSync('./core/listeners').filter(file => file.endsWith('.ts'));
         for (let listener_file of listeners) {
-            const listener = require(`./listeners/${listener_file}`);
-            this.add_event_listener(listener.body(this));
+            import(`./listeners/${listener_file}`)
+                .then((listener: Listener) => {
+                    this.add_event_listener(listener.body(this));
+                })
+                .catch((err: Error) => console.log(err));
         }
     }
 
     add_event_listener(listener: () => void): void { listener(); }
 
-
-
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /*

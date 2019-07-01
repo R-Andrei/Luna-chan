@@ -4,6 +4,6 @@ core/config.json
 core/logging/*.js
 core/storage/*.js
 core/listeners/*.js
-core/abilities/active/*.js
-core/abilities/passive/*.js
+core/abilities/*.js
+
 *.yml

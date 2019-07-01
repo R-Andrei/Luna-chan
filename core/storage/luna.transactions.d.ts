@@ -1,16 +1,15 @@
-interface Collections {
-    [property_name: string]: string;
-}
-declare class StorageWorker {
-    address: string;
+import { Generic } from '../types';
+import { Message, Guild } from 'discord.js';
+import { Ability } from '../abilities/template.ability';
+export declare class StorageWorker {
     database_name: string;
-    collections: Collections;
-    client: any;
-    database: any;
-    constructor(user: string, token: string, address: string, database: string, collections: Collections);
+    collections: Generic;
+    private address;
+    private client;
+    private database;
+    constructor(user: string, token: string, address: string, database: string, collections: Generic);
     open_connection(): Promise<string>;
-    record_cast(message: any, ability: any): Promise<string>;
-    update_server(server: any, record_type: any): Promise<string>;
+    update_ability(message: Message, ability: Ability): Promise<string>;
+    update_server(server: Guild, record_type: string): Promise<string>;
     close_connection(): Promise<string>;
 }
-export = StorageWorker;

@@ -1,10 +1,10 @@
 import { Client, Collection, Snowflake } from 'discord.js';
-import StorageWorker from './storage/luna.transactions';
-import Logger from './logging/logger.active';
-declare class Luna {
+import { StorageWorker } from './storage/luna.transactions';
+import { Logger } from './logging/logger.active';
+import { Ability } from './abilities/template.ability.js';
+export declare class Luna {
     client: Client;
-    actives: Collection<Snowflake, {}>;
-    passives: Collection<Snowflake, {}>;
+    abilities: Collection<Snowflake, Ability>;
     logger: Logger;
     storage: StorageWorker;
     constructor();
@@ -13,4 +13,3 @@ declare class Luna {
     init_listeners(): void;
     add_event_listener(listener: () => void): void;
 }
-export = Luna;

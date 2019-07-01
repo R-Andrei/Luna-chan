@@ -2,6 +2,7 @@ import { Message, TextChannel, GroupDMChannel, DMChannel } from 'discord.js';
 import { prefix } from '../prefixes.json';
 import moment from 'moment';
 import { Actions } from '../types'
+import { Ability } from '../abilities/template.ability.js';
 
 export class Logger {
     private actions: Actions;
@@ -18,7 +19,7 @@ export class Logger {
         }
     }
 
-    log_ability_error (message: Message, ability: any, action: string, error: string) {
+    log_ability_error (message: Message, ability: Ability, action: string, error: Error): void {
         const text_channel: TextChannel | DMChannel| GroupDMChannel = message.channel
         if (text_channel instanceof DMChannel || text_channel instanceof GroupDMChannel) return
         console.log([
@@ -30,7 +31,7 @@ export class Logger {
         ].join(' '));
     }
 
-    log_ability_success (result: Message|Array<Message>, message: Message, ability: any) {
+    log_ability_success (result: Message|Array<Message>, message: Message, ability: Ability): void {
         if (result instanceof Array) return
         const text_channel: TextChannel | DMChannel| GroupDMChannel = result.channel
         if (text_channel instanceof DMChannel || text_channel instanceof GroupDMChannel) return
