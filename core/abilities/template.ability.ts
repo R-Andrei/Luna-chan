@@ -9,6 +9,6 @@ export class Ability {
     public usage: string;
     public type: Active|Passive;
     public subtype: Main|Fake;
-    public execute: (message: Message, args: string[]) => Promise<Message|Message[]>
+    public execute: (message: Message, ...args: string[]) => Promise<Message|Message[]>
 }
 

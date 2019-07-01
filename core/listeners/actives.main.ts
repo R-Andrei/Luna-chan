@@ -19,8 +19,7 @@ class ActiveMain implements Listener {
                         const command: string = args.shift().toLowerCase();
                         if (instance.abilities.find(ability => { return ability.name === command && ability.subtype === main; })) {
                             const ability: Ability = instance.abilities.get(command);
-
-                            ability.execute(msg, args)
+                            ability.execute(msg, ...args)
                                 .then((result: Message|Message[]) => {
                                     instance.logger.log_ability_success(result, msg, ability);
                                     instance.storage.update_ability(msg, ability)
