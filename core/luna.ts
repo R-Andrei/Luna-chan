@@ -1,57 +1,59 @@
-import { Client, Collection } from 'discord.js';
-import StorageWorker from './storage/luna.transactions';
-import Logger from './logging/logger.active';
+import { Client, Collection, Snowflake } from 'discord.js';
 import { cloud, token } from './config.json';
+import { StorageWorker } from './storage/luna.transactions';
+import { Logger } from './logging/logger.active';
 import fs from 'fs';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
-class Luna {
-    public client: any = new Client();
-    public actives: any = new Collection();
-    public passives: any = new Collection();
-    public logger: Logger = new Logger();
+export class Luna {
+    private client: Client = new Client();
+    public actives: Collection<Snowflake,{}> = new Collection();
+    public passives: Collection<Snowflake,{}> = new Collection();
+    public logger: Logger = new Logger(); //TODO make logger private
     public storage: StorageWorker = new StorageWorker(cloud.user, cloud.key, cloud.address, cloud.database, cloud.collections);
     constructor () {
         this.init_listeners();
         this.init_abilities();
     }
 
-    wake_up () {
-        this.storage.open_connection()
-            .then((result: string) => {
-                console.log(result);
-                this.client.login(token);
-            })
-            .catch((err: any) => console.log(err));
+    wake_up(): void {
+        // this.storage.open_connection()
+        //     .then((result: string) => {
+        //         console.log(result);
+                
+        //     })
+        //     .catch((err: any) => console.log(err));
+        this.client.login(token);
     }
 
-    init_abilities () {
-        const actives = fs.readdirSync('./core/abilities/active').filter(file => file.endsWith('.js'));
-        const passives = fs.readdirSync('./core/abilities/passive').filter(file => file.endsWith('.js'));
-        for (const ability_file of actives) {
+    init_abilities(): void {
+        const actives: string[] = fs.readdirSync('./core/abilities/active').filter(file => file.endsWith('.js'));
+        const passives: string[] = fs.readdirSync('./core/abilities/passive').filter(file => file.endsWith('.js'));
+        for (let ability_file of actives) {
             const ability = require(`./abilities/active/${ability_file}`);
             this.actives.set(ability.name, ability);
         }
-        for (const ability_file of passives) {
+        for (let ability_file of passives) {
             const ability = require(`./abilities/passive/${ability_file}`);
             this.passives.set(ability.name, ability);
         }
     }
 
-    init_listeners () {
-        const listeners = fs.readdirSync('./core/listeners').filter(file => file.endsWith('.js'));
-        for (const listener_file of listeners) {
+    init_listeners(): void {
+        const listeners: string[] = fs.readdirSync('./core/listeners').filter(file => file.endsWith('.js'));
+        for (let listener_file of listeners) {
             const listener = require(`./listeners/${listener_file}`);
             this.add_event_listener(listener.body(this));
         }
     }
 
-    add_event_listener (listener: () => void) { listener(); }
+    add_event_listener(listener: () => void): void { listener(); }
+
+
 
 }
 
-export = Luna
 
 /*
 //fake private listener

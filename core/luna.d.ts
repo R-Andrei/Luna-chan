@@ -1,9 +1,10 @@
+import { Client, Collection, Snowflake } from 'discord.js';
 import StorageWorker from './storage/luna.transactions';
 import Logger from './logging/logger.active';
 declare class Luna {
-    client: any;
-    actives: any;
-    passives: any;
+    client: Client;
+    actives: Collection<Snowflake, {}>;
+    passives: Collection<Snowflake, {}>;
     logger: Logger;
     storage: StorageWorker;
     constructor();
