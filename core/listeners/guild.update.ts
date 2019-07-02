@@ -10,13 +10,18 @@ class GuildUpdate implements Listener {
     constructor() {
         this.body = (instance) => {
             return () => {
-                instance.client.on('guildUpdate', (_old_guild: Guild, new_guild: Guild) => {
-                    instance.storage.update_server(new_guild, 'server_info')
-                        .then((result: string) => console.log(result))
-                        .catch((err: Error) => console.log(err));
+                instance.client.on('guildUpdate', (_oldGuild: Guild, newGuild: Guild) => {
+                    const listener: Listener = instance.listeners.get('guild.update');
+                    listener.execute(instance, newGuild);
                 });
             }
         }
+    }
+
+    public execute = (instance: Luna, newGuild: Guild): void => {
+        instance.storage.update_server(newGuild, 'server_info')
+            .then((result: string) => console.log(result))
+            .catch((err: Error) => console.log(err));
     }
 }
 
