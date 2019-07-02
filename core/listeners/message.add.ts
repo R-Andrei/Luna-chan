@@ -2,7 +2,6 @@ import { prefix } from '../prefixes.json'
 import { Listener } from './template.listener.js';
 import { Luna } from '../luna'
 import { Ability } from '../abilities/template.ability.js';
-import { main } from '../types.js';
 import { Message } from 'discord.js';
 
 
@@ -17,7 +16,7 @@ class ActiveMain implements Listener {
                     if (msg.content.startsWith(prefix) && !msg.author.bot) {
                         const args: string[] = msg.content.slice(prefix.length).split(/\s+/);
                         const command: string = args.shift().toLowerCase();
-                        if (instance.abilities.find(ability => { return ability.name === command && ability.subtype === main; })) {
+                        if (instance.abilities.get(command)) {
                             const ability: Ability = instance.abilities.get(command);
                             ability.execute(msg, ...args)
                                 .then((result: Message|Message[]) => {

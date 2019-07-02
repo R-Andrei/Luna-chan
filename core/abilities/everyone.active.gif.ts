@@ -1,7 +1,7 @@
 import { get } from 'request-promise';
 import { load } from 'cheerio';
 import { Ability } from './template.ability';
-import { active, main, Active, Passive, Main, Fake } from '../types';
+import { AbilityType, EveryoneActive } from '../types';
 import { Message } from 'discord.js';
 
 class Gif implements Ability {
@@ -10,8 +10,7 @@ class Gif implements Ability {
     public args: boolean = true;
     public min_args: number = 1;
     public usage: string = '<tags> <*separated by spaces>';
-    public type: Active|Passive = active;
-    public subtype: Main|Fake = main;
+    public type: AbilityType = EveryoneActive;
     public execute: (message: Message, ...args: string[]) => Promise<Message|Message[]>
     constructor() {
         this.execute = async (message, ...args): Promise<Message|Message[]> => {

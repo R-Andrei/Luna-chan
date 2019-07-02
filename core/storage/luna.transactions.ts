@@ -1,20 +1,21 @@
-import { Generic, SetServerRecord, AbilityRecord } from '../types'
+import { MongoClient, Db, InsertOneWriteOpResult, FindAndModifyWriteOpResultObject } from 'mongodb';
 import { Message, TextChannel, DMChannel, GroupDMChannel, Guild } from 'discord.js';
+import { Generic, SetServerRecord, AbilityRecord } from '../types'
 import { Ability } from '../abilities/template.ability';
-import Mongo from 'mongodb';
+
 
 
 export class StorageWorker {
     public database_name: string;
     public collections: Generic;
     private address: string;
-    private client: Mongo.MongoClient;
-    private database: Mongo.Db;
+    private client: MongoClient;
+    private database: Db;
     constructor (user: string, token: string, address: string, database: string, collections: Generic) {
         this.address = address;
         this.database_name = database;
         this.collections = collections;
-        this.client = new Mongo.MongoClient(`mongodb+srv://${user}:${token}@${address}/${database}/?retryWrites=true&w=majority`, { useNewUrlParser: true });
+        this.client = new MongoClient(`mongodb+srv://${user}:${token}@${address}/${database}/?retryWrites=true&w=majority`, { useNewUrlParser: true });
     }
 
     async open_connection (): Promise<string> {
@@ -46,7 +47,7 @@ export class StorageWorker {
                         timestamp: message.createdTimestamp
                     };
                     collection.insertOne(data_set)
-                        .then((_result: Mongo.InsertOneWriteOpResult) => resolve(`Transaction finished. Inserted data set (${Object.values(data_set).join(', ')}) into collection ${this.collections.abilities}'.`))
+                        .then((_result: InsertOneWriteOpResult) => resolve(`Transaction finished. Inserted data set (${Object.values(data_set).join(', ')}) into collection ${this.collections.abilities}'.`))
                         .catch((err: Error) => reject(err));
                 })
                 .catch((err: Error) => reject(err));
@@ -71,7 +72,7 @@ export class StorageWorker {
                 data_set,
                 { upsert: true }
             )
-            .then((_result: Mongo.FindAndModifyWriteOpResultObject ) => 
+            .then((_result: FindAndModifyWriteOpResultObject ) => 
                 resolve(`Transaction finished. Inserted data set (${Object.values(data_set['$set']).join(', ')}) into collection ${this.collections.servers}'.`)
             )
             .catch((err: Error) => reject(err));

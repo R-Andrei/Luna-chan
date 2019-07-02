@@ -19,13 +19,13 @@ export class Luna {
     }
 
     wake_up(): void {
-        this.storage.open_connection()
-            .then((result: string) => {
-                console.log(result);
-            this.client.login(token);
-        })
-        .catch((err: Error) => console.log(err));
-        
+        // this.storage.open_connection()
+        //     .then((result: string) => {
+        //         console.log(result);
+        //     
+        // })
+        // .catch((err: Error) => console.log(err));
+        this.client.login(token);
     }
 
     init_abilities(): void {
