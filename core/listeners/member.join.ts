@@ -11,12 +11,17 @@ class MemberJoin implements Listener {
         this.body = (instance) => {
             return () => {
                 instance.client.on('guildMemberAdd', (member: GuildMember) => {
-                    instance.storage.update_server(member.guild, 'server_info')
-                        .then((result: string) => console.log(result))
-                        .catch((err: Error) => console.log(err));
+                    const listener: Listener = instance.listeners.get('member.join');
+                    listener.execute(instance, member);
                 });
             }
         }
+    }
+
+    public execute = (instance: Luna, member: GuildMember): void => {
+        instance.storage.update_server(member.guild, 'server_info')
+            .then((result: string) => console.log(result))
+            .catch((err: Error) => console.log(err));
     }
 }
 

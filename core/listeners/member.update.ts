@@ -10,14 +10,18 @@ class MemberUpdate implements Listener {
     constructor() {
         this.body = (instance) => {
             return () => {
-                instance.client.on('guildMemberUpdate', (_old_member: GuildMember, new_member: GuildMember) => {
-                    if(new_member.id === new_member.guild.ownerID)
-                        instance.storage.update_server(new_member.guild, 'server_info')
-                            .then((result: string) => console.log(result))
-                            .catch((err: Error) => console.log(err));
+                instance.client.on('guildMemberUpdate', (_oldMember: GuildMember, newMember: GuildMember) => {
+                    const listener: Listener = instance.listeners.get('member.update');
+                    if (newMember.id === newMember.guild.ownerID) listener.execute(instance, newMember)
                 });
             }
         }
+    }
+
+    public execute = (instance: Luna, newMember: GuildMember): void => {
+        instance.storage.update_server(newMember.guild, 'server_info')
+            .then((result: string) => console.log(result))
+            .catch((err: Error) => console.log(err));
     }
 }
 

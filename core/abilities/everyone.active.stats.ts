@@ -1,5 +1,5 @@
 import { Ability } from './template.ability';
-import { active, main, Active, Passive, Main, Fake } from '../types';
+import { AbilityType, GuildActive } from '../types';
 import { Message, RichEmbed, GuildMember } from 'discord.js';
 import moment from 'moment';
 
@@ -9,8 +9,7 @@ class Stats implements Ability {
     public args: boolean = true;
     public min_args: number = 1;
     public usage: string = '@user_mention, or just !stats';
-    public type: Active|Passive = active;
-    public subtype: Main|Fake = main;
+    public type: AbilityType = GuildActive;
     public execute: (message: Message, ...args: string[]) => Promise<Message|Message[]>
     constructor() {
         this.execute = async (message, ...args): Promise<Message|Message[]> => {

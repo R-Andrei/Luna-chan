@@ -6,4 +6,5 @@
 import { Luna } from './core/luna.js';
 
 let luna: Luna = new Luna();
+
 luna.wake_up();

@@ -1,5 +1,5 @@
 import { Ability } from './template.ability';
-import { active, main, Active, Passive, Main, Fake } from '../types';
+import { AbilityType, EveryoneActive } from '../types';
 import { Message } from 'discord.js';
 
 class Invite implements Ability {
@@ -8,8 +8,7 @@ class Invite implements Ability {
     public args: boolean = false;
     public min_args: number = 0;
     public usage: string = 'TBD';
-    public type: Active|Passive = active;
-    public subtype: Main|Fake = main;
+    public type: AbilityType = EveryoneActive;
     public execute: (message: Message, ...args: string[]) => Promise<Message|Message[]>
     constructor() {
         this.execute = async (message, ...args): Promise<Message|Message[]> => {

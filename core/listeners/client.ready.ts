@@ -10,11 +10,16 @@ class ClientReady implements Listener {
         this.body = (instance) => {
             return () => {
                 instance.client.on('ready', () => {
-                    console.log(`Logged in as ${instance.client.user.tag}!`);
-                    instance.client.user.setActivity('with your feelings');
+                    const listener = instance.listeners.get('client.ready');
+                    listener.execute(instance);
                 });
             }
         }
+    }
+
+    public execute = (instance: Luna): void => {
+        console.log(`Logged in as ${instance.client.user.tag}!`);
+        instance.client.user.setActivity('with your feelings');
     }
 }
 

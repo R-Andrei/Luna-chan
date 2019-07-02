@@ -2,14 +2,16 @@ import { Client, Collection, Snowflake } from 'discord.js';
 import { cloud, token } from './config.json';
 import { StorageWorker } from './storage/luna.transactions';
 import { Logger } from './logging/logger.active';
-import fs from 'fs';
+import { readdirSync } from 'fs';
 import { Ability } from './abilities/template.ability.js';
+import { Listener } from './listeners/template.listener.js';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
 export class Luna {
     public client: Client = new Client();
-    public abilities: Collection<Snowflake, Ability> = new Collection(); //TODO user ability class
+    public abilities: Collection<Snowflake, Ability> = new Collection();
+    public listeners: Collection<Snowflake, Listener> = new Collection();
     public logger: Logger = new Logger(); //TODO make logger private
     public storage: StorageWorker = new StorageWorker(cloud.user, cloud.key, cloud.address, cloud.database, cloud.collections);
     constructor () {
@@ -19,21 +21,21 @@ export class Luna {
     }
 
     wake_up(): void {
-        this.storage.open_connection()
-            .then((result: string) => {
-                console.log(result);
-            this.client.login(token);
-        })
-        .catch((err: Error) => console.log(err));
-        
+        // this.storage.open_connection()
+        //     .then((result: string) => {
+        //         console.log(result);
+        //     
+        // })
+        // .catch((err: Error) => console.log(err));
+        this.client.login(token);
     }
 
     init_abilities(): void {
-        const abilities: string[] = fs.readdirSync('./core/abilities')
+        const abilities: string[] = readdirSync('./core/abilities')
             .filter((file: string) => { return (file.endsWith('.ts') && !file.startsWith('template')) });
         for (let ability_file of abilities) {
             import(`./abilities/${ability_file.replace(/\.ts$/s, '')}`)
-                .then(file => {
+                .then((file: any) => {
                     this.abilities.set(file.ability.name, file.ability);
                 })
                 .catch((err: Error) => console.log(err));
@@ -41,12 +43,14 @@ export class Luna {
     }
 
     init_listeners(): void {
-        const listeners: string[] = fs.readdirSync('./core/listeners')
+        const listeners: string[] = readdirSync('./core/listeners')
             .filter((file: string) => { return (file.endsWith('.ts') && !file.startsWith('template')) });
         for (let listener_file of listeners) {
             import(`./listeners/${listener_file.replace(/\.ts$/s, '')}`)
-                .then(file => {
-                    this.add_event_listener(file.listener.body(this));
+                .then((file: any) => {
+                    const listener: Listener = file.listener;
+                    this.add_event_listener(listener.body(this));
+                    this.listeners.set(listener.name, listener);
                 })
                 .catch((err: Error) => console.log(err));
         }

@@ -3,6 +3,7 @@ export interface Generic {
     [property_name : string]: string;
 }
 
+
 //core/logging/logger.active.ts
 export interface Actions {
     [property_name: string]: {
@@ -10,6 +11,7 @@ export interface Actions {
         subject: string
     }
 }
+
 
 //core/storage/luna.transactions.ts
 export interface ServerRecord {
@@ -36,34 +38,29 @@ export interface AbilityRecord {
     timestamp: number
 }
 
+
 //core/abilities
-class AbilityType {
-    public type: string;
+export interface AbilityType {
+    everyone: boolean,
+    ownerOnly: boolean,
+    guildOnly: boolean,
+    active: boolean
 }
-export class Active extends AbilityType {
-    constructor(public type: string = 'Active') {
-        super();
-    }
+export const EveryoneActive: AbilityType = {
+    everyone: true,
+    ownerOnly: false,
+    guildOnly: false,
+    active: true
 }
-export class Passive extends AbilityType {
-    constructor(public type: string = 'Passive') {
-        super();
-    }
+export const GuildActive: AbilityType = {
+    everyone: true,
+    ownerOnly: false,
+    guildOnly: true,
+    active: true
 }
-class SubType {
-    public type: string;
+export const GuildPassive: AbilityType = {
+    everyone: true,
+    ownerOnly: false,
+    guildOnly: true,
+    active: false
 }
-export class Main extends SubType {
-    constructor(public type: string = 'Main') {
-        super();
-    }
-}
-export class Fake extends SubType {
-    constructor(public type: string = 'Fake') {
-        super();
-    }
-}
-export const active = new Active();
-export const passive = new Passive();
-export const main = new Main();
-export const fake = new Fake();

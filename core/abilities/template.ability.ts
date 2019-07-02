@@ -1,5 +1,5 @@
-import { Active, Passive, Main, Fake } from '../types'
-import { Message, Snowflake } from 'discord.js';
+import { AbilityType } from '../types'
+import { Message } from 'discord.js';
 
 export class Ability {
     public name: string;
@@ -7,8 +7,7 @@ export class Ability {
     public args: boolean;
     public min_args: number;
     public usage: string;
-    public type: Active|Passive;
-    public subtype: Main|Fake;
+    public type: AbilityType;
     public execute: (message: Message, ...args: string[]) => Promise<Message|Message[]>
 }
 
