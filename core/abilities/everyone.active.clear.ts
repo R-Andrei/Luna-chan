@@ -2,22 +2,19 @@ import { Ability } from './template.ability';
 import { AbilityType, GuildActive } from '../types';
 import { Message } from 'discord.js';
 
-class Clear implements Ability {
-    public name: string = 'clear';
-    public description: string = 'Clears messages in a channel.';
-    public args: boolean = true;
-    public min_args: number = 1;
-    public usage: string = 'TBD';
-    public type: AbilityType = GuildActive;
-    public execute: (message: Message, ...args: string[]) => Promise<Message|Message[]>
-    constructor() {
-        this.execute = async (message, ...args): Promise<Message|Message[]> => {
-            return new Promise((resolve, reject) => {
+class Clear extends Ability {
+    public readonly name: string = 'clear';
+    public readonly description: string = 'Clears messages in a channel.';
+    public readonly args: boolean = true;
+    public readonly min_args: number = 1;
+    public readonly usage: string = 'TBD';
+    public readonly type: AbilityType = GuildActive;
+    public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
+        return new Promise((resolve, reject) => {
 
-            });
-        }
+        });
     }
 }
 
-export const ability: Ability = new Clear();
+export const trait: Ability = new Clear();
 

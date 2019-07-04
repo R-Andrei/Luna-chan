@@ -9,54 +9,62 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
 export class Luna {
-    public client: Client = new Client();
-    public abilities: Collection<Snowflake, Ability> = new Collection();
-    public listeners: Collection<Snowflake, Listener> = new Collection();
-    public logger: Logger = new Logger(); //TODO make logger private
-    public storage: StorageWorker = new StorageWorker(cloud.user, cloud.key, cloud.address, cloud.database, cloud.collections);
+
+    private readonly _client: Client = new Client();
+    private readonly _storage: StorageWorker = new StorageWorker(cloud.user, cloud.key, cloud.address, cloud.database, cloud.collections);
+
+    private _abilities: Collection<Snowflake, Ability> = new Collection();
+    private _listeners: Collection<Snowflake, Listener> = new Collection();
+
+    public readonly logger: Logger = new Logger(); //TODO make logger private
+
     constructor () {
-        this.init_listeners();
-        
-        this.init_abilities();
+        this.init_traits('abilities');
+        this.init_traits('listeners');
     }
 
-    wake_up(): void {
+    public readonly wake_up = (): void => {
         // this.storage.open_connection()
         //     .then((result: string) => {
         //         console.log(result);
         //     
         // })
         // .catch((err: Error) => console.log(err));
-        this.client.login(token);
+        this._client.login(token);
     }
 
-    init_abilities(): void {
-        const abilities: string[] = readdirSync('./core/abilities')
-            .filter((file: string) => { return (file.endsWith('.ts') && !file.startsWith('template')) });
-        for (let ability_file of abilities) {
-            import(`./abilities/${ability_file.replace(/\.ts$/s, '')}`)
+    public readonly init_traits = (type: string): void => {
+        const traits: string[] = readdirSync(`./core/${type}`)
+            .filter((file: string) => {return (file.endsWith('.ts') && !file.startsWith('template'))});
+        for (let traitFile of traits) {
+            import(`./${type}/${traitFile.replace(/\.ts$/s, '')}`)
                 .then((file: any) => {
-                    this.abilities.set(file.ability.name, file.ability);
-                })
-                .catch((err: Error) => console.log(err));
+                    const trait: Listener|Ability = file.trait;
+                    this[`_${type}`].set(trait.name, trait);
+                    if (trait instanceof Listener) this.addListener(trait.name, trait.body);
+                });
         }
     }
 
-    init_listeners(): void {
-        const listeners: string[] = readdirSync('./core/listeners')
-            .filter((file: string) => { return (file.endsWith('.ts') && !file.startsWith('template')) });
-        for (let listener_file of listeners) {
-            import(`./listeners/${listener_file.replace(/\.ts$/s, '')}`)
-                .then((file: any) => {
-                    const listener: Listener = file.listener;
-                    this.add_event_listener(listener.body(this));
-                    this.listeners.set(listener.name, listener);
-                })
-                .catch((err: Error) => console.log(err));
-        }
+    public readonly addListener = (name: string, callback: (instance: Luna, ...args: any[]) => void): void => {
+        this._client.on(name, callback);
     }
 
-    add_event_listener(listener: () => void): void { listener(); }
+    public readonly Client = (): Client => {
+        return this._client;
+    }
+    public readonly getAbility = (name: string): Ability => {
+        if (this._abilities.has(name)) return this._abilities.get(name);
+    }
+    public readonly getListener = (name: string): Listener => {
+        if (this._listeners.has(name)) return this._listeners.get(name);
+    }
+    public readonly setAbility = (name: string, ability: Ability): void => {
+        this._abilities.set(name, ability);
+    }
+    public readonly setListener = (name: string, listener: Listener): void => {
+        this._listeners.set(name, listener);
+    }
 
 }
 

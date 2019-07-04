@@ -2,25 +2,19 @@ import { Listener } from "./template.listener";
 import { Luna } from "../luna";
 
 
-class ClientReady implements Listener {
-    public name: string = 'client.ready';
-    public description: string = 'Listener for ready login event.';
-    public body: (instance: Luna) => () => void;
-    constructor() {
-        this.body = (instance) => {
-            return () => {
-                instance.client.on('ready', () => {
-                    const listener = instance.listeners.get('client.ready');
-                    listener.execute(instance);
-                });
-            }
-        }
+class ClientReady extends Listener {
+    public readonly name: string = 'ready';
+    public readonly description: string = 'Listener for ready login event.';
+    public readonly body = (instance: Luna): void => {
+        const listener = instance.getListener(this.name);
+        listener.execute(instance);
+
     }
 
-    public execute = (instance: Luna): void => {
-        console.log(`Logged in as ${instance.client.user.tag}!`);
-        instance.client.user.setActivity('with your feelings');
+    public readonly execute = (instance: Luna): void => {
+        console.log(`Logged in as ${instance.Client().user.tag}!`);
+        instance.Client().user.setActivity('with your feelings');
     }
 }
 
-export const listener: Listener = new ClientReady();
+export const trait: Listener = new ClientReady();

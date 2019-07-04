@@ -3,26 +3,20 @@ import { Luna } from "../luna";
 import { GuildMember } from "discord.js";
 
 
-class MemberUpdate implements Listener {
-    public name: string = 'member.update';
-    public description: string = 'Listener for member update event.';
-    public body: (instance: Luna) => () => void;
-    constructor() {
-        this.body = (instance) => {
-            return () => {
-                instance.client.on('guildMemberUpdate', (_oldMember: GuildMember, newMember: GuildMember) => {
-                    const listener: Listener = instance.listeners.get('member.update');
-                    if (newMember.id === newMember.guild.ownerID) listener.execute(instance, newMember)
-                });
-            }
-        }
+class MemberUpdate extends Listener {
+    public readonly name: string = 'guildMemberUpdate';
+    public readonly description: string = 'Listener for member update event.';
+
+    public readonly body = (instance: Luna,_oldMember: GuildMember, newMember: GuildMember): void => {
+        const listener: Listener = instance.getListener(this.name);
+        if (newMember.id === newMember.guild.ownerID) listener.execute(instance, newMember)
     }
 
-    public execute = (instance: Luna, newMember: GuildMember): void => {
-        instance.storage.update_server(newMember.guild, 'server_info')
-            .then((result: string) => console.log(result))
-            .catch((err: Error) => console.log(err));
+    public readonly execute = (instance: Luna, newMember: GuildMember): void => {
+        // instance.storage.update_server(newMember.guild, 'server_info') #TODO private storage access
+        //     .then((result: string) => console.log(result))
+        //     .catch((err: Error) => console.log(err));
     }
 }
 
-export const listener: Listener = new MemberUpdate();
+export const trait: Listener = new MemberUpdate();

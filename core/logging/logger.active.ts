@@ -5,9 +5,9 @@ import { Actions } from '../types'
 import { Ability } from '../abilities/template.ability.js';
 
 export class Logger {
-    private actions: Actions;
+    private readonly actions: Actions;
     constructor () {
-        this.actions = { //TODO makr obsolete
+        this.actions = { //TODO make obsolete
             ability: {
                 activity: "casting",
                 subject: "ability"

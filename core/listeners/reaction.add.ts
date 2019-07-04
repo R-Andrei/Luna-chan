@@ -4,25 +4,18 @@ import { MessageReaction, User } from "discord.js";
 
 
 class ReactionAdd extends Listener {
-    public name: string = 'reaction.add';
-    public description: string = 'Listener for message reaction event.';
-    public body: (instance: Luna) => () => void;
-    constructor() {
-        super();
-        this.body = (instance) => {
-            return () => {
-                instance.client.on('messageReactionAdd', (reaction: MessageReaction, user: User) => {
-                    const listener: Listener = instance.listeners.get('reaction.add');
-                    listener.execute(instance, reaction, user);
-                });
-            }
-        }
+    public readonly name: string = 'messageReactionAdd';
+    public readonly description: string = 'Listener for message reaction event.';
+
+    public readonly body = (instance: Luna, reaction: MessageReaction, user: User): void => {
+        const listener: Listener = instance.getListener(this.name);
+        listener.execute(instance, reaction, user);
     }
 
-    public execute = (instance: Luna, command: string, reaction: MessageReaction, user: User): void => {
+    public readonly execute = (instance: Luna, command: string, reaction: MessageReaction, user: User): void => {
         console.log(instance, reaction, user, command);
     }
 }
 
-export const listener: Listener = new ReactionAdd();
+export const trait: Listener = new ReactionAdd();
 
