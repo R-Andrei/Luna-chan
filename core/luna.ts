@@ -5,7 +5,7 @@ import { Logger } from './logging/logger.active';
 import { readdirSync } from 'fs';
 import { Ability } from './abilities/template.ability';
 import { Listener } from './listeners/template.listener';
-import { Validator } from './decorators';
+import { Authorize, Validate } from './luna.decorators';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
@@ -25,13 +25,13 @@ export class Luna {
     }
 
     public readonly wake_up = (): void => {
-        // this.storage.open_connection()
-        //     .then((result: string) => {
-        //         console.log(result);
-        //     
-        // })
-        // .catch((err: Error) => console.log(err));
-        this._client.login(token);
+        this._storage.open_connection()
+            .then((result: string) => {
+                console.log(result);
+                this._client.login(token);
+        })
+        .catch((err: Error) => console.log(err));
+        
     }
 
     public readonly init_traits = (type: string): void => {
@@ -40,7 +40,7 @@ export class Luna {
         for (let traitFile of traits) {
             import(`./${type}/${traitFile.replace(/\.ts$/s, '')}`)
                 .then((file: any) => {
-                    const trait: Listener|Ability = file.trait;
+                    const trait: Listener | Ability = file.trait;
                     this[`_${type}`].set(trait.name, trait);
                     if (trait instanceof Listener) this.addListener(trait.body(this));
                 });
@@ -49,25 +49,16 @@ export class Luna {
 
     public readonly addListener = (listener: () => void): void => { listener(); }
 
-    @Validator()
-    public Client (_token: Luna|Ability|Listener|StorageWorker): Client { 
-        return this._client; 
+    @Validate()
+    @Authorize()
+    public get(_token: Luna|Ability|Listener|StorageWorker, property: string, name?: string): Ability|Listener|Client {
+        return (property === 'client') ? this[`_${property}`] : this[`_${property}`].get(name);
     }
-    @Validator()
-    public getAbility (_token: Luna|Ability|Listener|StorageWorker, name: string): Ability {
-        if (this._abilities.has(name)) return this._abilities.get(name);
-    }
-    @Validator()
-    public getListener (_token: Luna|Ability|Listener|StorageWorker, name: string): Listener {
-        if (this._listeners.has(name)) return this._listeners.get(name);
-    }
-    @Validator()
-    public setAbility (_token: Luna|Ability|Listener|StorageWorker, ability: Ability, name: string): void {
-        this._abilities.set(name, ability);
-    }
-    @Validator()
-    public setListener (_token: Luna|Ability|Listener|StorageWorker, listener: Listener, name: string): void {
-        this._listeners.set(name, listener);
+
+    @Validate()
+    @Authorize()
+    public set(_token: Luna|Ability|Listener|StorageWorker, property: string, name: string, value: Ability|Listener): void {
+        this[`_${property}`].set(name, value);
     }
 
 }

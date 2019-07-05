@@ -1,6 +1,7 @@
 import { Listener } from "./template.listener";
 import { Luna } from "../luna";
-import { GuildMember } from "discord.js";
+import { GuildMember, Client } from "discord.js";
+import { Ability } from "../abilities/template.ability";
 
 
 class MemberUpdate extends Listener {
@@ -9,10 +10,14 @@ class MemberUpdate extends Listener {
 
     public readonly body = (instance: Luna): () => void => {
         return () => {
-            instance.Client(this).on(this.name, (_oldMember: GuildMember, newMember: GuildMember) => {
-                const listener: Listener = instance.getListener(this, this.name);
-                if (newMember.id === newMember.guild.ownerID) listener.execute(instance, newMember)
-            });
+            const client: Listener|Ability|Client = instance.get(this, 'client');
+            if (client instanceof Client) {
+                client.on(this.name, (_oldMember: GuildMember, newMember: GuildMember) => {
+                    const listener: Listener|Ability|Client = instance.get(this, 'listener', this.name);
+                    if (listener instanceof Listener && newMember.id === newMember.guild.ownerID) 
+                        listener.execute(instance, newMember)
+                });
+            }
         }
     }
 

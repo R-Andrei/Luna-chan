@@ -1,6 +1,6 @@
 import { Listener } from "./template.listener";
 import { Luna } from "../luna";
-import { MessageReaction, User } from "discord.js";
+import { MessageReaction, User, Client } from "discord.js";
 
 
 class ReactionAdd extends Listener {
@@ -9,10 +9,13 @@ class ReactionAdd extends Listener {
 
     public readonly body = (instance: Luna): () => void => {
         return () => {
-            instance.Client(this).on(this.name, (reaction: MessageReaction, user: User) => {
-                const listener: Listener = instance.getListener(this, this.name);
-                listener.execute(instance, reaction, user);
-            });
+            const client = instance.get(this, 'client');
+            if (client instanceof Client) {
+                client.on(this.name, (reaction: MessageReaction, user: User) => {
+                    const listener = instance.get(this, 'listener', this.name);
+                    if (listener instanceof Listener) listener.execute(instance, reaction, user);
+                });
+            }
         }
     }
 

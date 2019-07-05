@@ -1,5 +1,6 @@
 import { Listener } from "./template.listener";
 import { Luna } from "../luna";
+import { Client } from "discord.js";
 
 
 class ClientReady extends Listener {
@@ -7,16 +8,22 @@ class ClientReady extends Listener {
     public readonly description: string = 'Listener for ready login event.';
     public readonly body = (instance: Luna): () => void => {
         return () => {
-            instance.Client(this).on(this.name, () => {
-                const listener = instance.getListener(this, this.name);
-                listener.execute(instance);
-            });
+            const client = instance.get(this, 'client');
+            if (client instanceof Client) {
+                client.on(this.name, () => {
+                    const listener = instance.get(this, 'listener', this.name);
+                    if (listener instanceof Listener) listener.execute(instance);
+                });
+            }
         }
     }
 
     public readonly execute = (instance: Luna): void => {
-        console.log(`Logged in as ${instance.Client(this).user.tag}!`);
-        instance.Client(this).user.setActivity('with your feelings');
+        const client = instance.get(this, 'client');
+        if (client instanceof Client) {
+            console.log(`Logged in as ${client.user.tag}!`);
+            client.user.setActivity('with your feelings');
+        }
     }
 }
 
