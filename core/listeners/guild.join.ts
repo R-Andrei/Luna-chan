@@ -7,10 +7,13 @@ class GuildJoin extends Listener {
     public readonly name: string = 'guildCreate';
     public readonly description: string = 'Listener for guild join event.';
 
-    public readonly body = (instance: Luna, guild: Guild) => {
-        const listener = instance.getListener(this.name);
-        listener.execute(instance, guild);
-
+    public readonly body = (instance: Luna): () => void => {
+        return () => {
+            instance.Client(this).on(this.name, (guild: Guild) => {
+                const listener = instance.getListener(this.name);
+                listener.execute(instance, guild);
+            });
+        }
     }
 
     public readonly execute = (instance: Luna, guild: Guild): void => {

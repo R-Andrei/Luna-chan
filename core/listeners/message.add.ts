@@ -9,22 +9,26 @@ class MessageAdd extends Listener {
     public readonly name: string = 'message';
     public readonly description: string = 'Main message listener. Used by all users for commands.';
 
-    public readonly body = (instance: Luna, message: Message): void => {
-        const listener: Listener = instance.getListener(this.name);
+    public readonly body = (instance: Luna): () => void => {
+        return () => {
+            instance.Client(this).on('this.name', (message: Message) => {
+                const listener: Listener = instance.getListener(this.name);
+                if (message.content.startsWith(prefix) && !message.author.bot) {
+                    const args: string[] = message.content.slice(prefix.length).split(/\s+/);
+                    const command: string = args.shift().toLowerCase();
+                    if (message.author.tag === 'Fake#1000' && message.channel.id === '588668921075335178' && listener instanceof MessageAdd) {
+                        listener.fake_execute(instance, command, args, message);
+                    } 
 
-        if (message.content.startsWith(prefix) && !message.author.bot) {
-            const args: string[] = message.content.slice(prefix.length).split(/\s+/);
-            const command: string = args.shift().toLowerCase();
+                    else listener.execute(instance, command, args, message)
+                        .then((result: string) => console.log(result))
+                        .catch((err: Error) => console.log(err));
+                } 
 
-            if (message.author.tag === 'Fake#1000' && message.channel.id === '588668921075335178' && listener instanceof MessageAdd) {
-                listener.fake_execute(instance, command, args, message);
-            } 
-            
-            else listener.execute(instance, command, args, message)
-        } 
-        
-        else if (!message.content.startsWith(prefix) && !message.author.bot && listener instanceof MessageAdd) 
-            listener.passive_execute(instance, message);
+                else if (!message.content.startsWith(prefix) && !message.author.bot && listener instanceof MessageAdd) 
+                    listener.passive_execute(instance, message);
+            });
+        }
     }
 
     public readonly execute = (instance: Luna, command: string, args: string[], message: Message): void => {

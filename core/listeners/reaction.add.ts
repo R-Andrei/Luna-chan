@@ -7,9 +7,13 @@ class ReactionAdd extends Listener {
     public readonly name: string = 'messageReactionAdd';
     public readonly description: string = 'Listener for message reaction event.';
 
-    public readonly body = (instance: Luna, reaction: MessageReaction, user: User): void => {
-        const listener: Listener = instance.getListener(this.name);
-        listener.execute(instance, reaction, user);
+    public readonly body = (instance: Luna): () => void => {
+        return () => {
+            instance.Client(this).on(this.name, (reaction: MessageReaction, user: User) => {
+                const listener: Listener = instance.getListener(this.name);
+                listener.execute(instance, reaction, user);
+            });
+        }
     }
 
     public readonly execute = (instance: Luna, command: string, reaction: MessageReaction, user: User): void => {

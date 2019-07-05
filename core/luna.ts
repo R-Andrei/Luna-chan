@@ -3,8 +3,9 @@ import { cloud, token } from './config.json';
 import { StorageWorker } from './storage/luna.transactions';
 import { Logger } from './logging/logger.active';
 import { readdirSync } from 'fs';
-import { Ability } from './abilities/template.ability.js';
-import { Listener } from './listeners/template.listener.js';
+import { Ability } from './abilities/template.ability';
+import { Listener } from './listeners/template.listener';
+import { Validator } from './decorators';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
@@ -41,18 +42,16 @@ export class Luna {
                 .then((file: any) => {
                     const trait: Listener|Ability = file.trait;
                     this[`_${type}`].set(trait.name, trait);
-                    if (trait instanceof Listener) this.addListener(trait.name, trait.body);
+                    if (trait instanceof Listener) this.addListener(trait.body(this));
                 });
         }
     }
 
-    public readonly addListener = (name: string, callback: (instance: Luna, ...args: any[]) => void): void => {
-        this._client.on(name, callback);
-    }
+    public readonly addListener = (listener: () => void): void => { listener(); }
 
-    public readonly Client = (): Client => {
-        return this._client;
-    }
+    @Validator()
+    public Client (_token: Luna|Ability|Listener|StorageWorker): Client { return this._client; }
+
     public readonly getAbility = (name: string): Ability => {
         if (this._abilities.has(name)) return this._abilities.get(name);
     }
@@ -67,13 +66,6 @@ export class Luna {
     }
 
 }
-
-
-
-
-
-
-
 
 
 
