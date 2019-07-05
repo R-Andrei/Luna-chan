@@ -10,7 +10,7 @@ class MemberJoin extends Listener {
     public readonly body = (instance: Luna): () => void => {
         return () => {
             instance.Client(this).on(this.name, (member: GuildMember) => {
-                const listener: Listener = instance.getListener(this.name);
+                const listener: Listener = instance.getListener(this, this.name);
                 listener.execute(instance, member);
             });
         }

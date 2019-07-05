@@ -8,7 +8,7 @@ class ClientReady extends Listener {
     public readonly body = (instance: Luna): () => void => {
         return () => {
             instance.Client(this).on(this.name, () => {
-                const listener = instance.getListener(this.name);
+                const listener = instance.getListener(this, this.name);
                 listener.execute(instance);
             });
         }

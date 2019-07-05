@@ -50,18 +50,23 @@ export class Luna {
     public readonly addListener = (listener: () => void): void => { listener(); }
 
     @Validator()
-    public Client (_token: Luna|Ability|Listener|StorageWorker): Client { return this._client; }
-
-    public readonly getAbility = (name: string): Ability => {
+    public Client (_token: Luna|Ability|Listener|StorageWorker): Client { 
+        return this._client; 
+    }
+    @Validator()
+    public getAbility (_token: Luna|Ability|Listener|StorageWorker, name: string): Ability {
         if (this._abilities.has(name)) return this._abilities.get(name);
     }
-    public readonly getListener = (name: string): Listener => {
+    @Validator()
+    public getListener (_token: Luna|Ability|Listener|StorageWorker, name: string): Listener {
         if (this._listeners.has(name)) return this._listeners.get(name);
     }
-    public readonly setAbility = (name: string, ability: Ability): void => {
+    @Validator()
+    public setAbility (_token: Luna|Ability|Listener|StorageWorker, ability: Ability, name: string): void {
         this._abilities.set(name, ability);
     }
-    public readonly setListener = (name: string, listener: Listener): void => {
+    @Validator()
+    public setListener (_token: Luna|Ability|Listener|StorageWorker, listener: Listener, name: string): void {
         this._listeners.set(name, listener);
     }
 

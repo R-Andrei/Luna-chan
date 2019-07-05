@@ -10,7 +10,7 @@ class MemberUpdate extends Listener {
     public readonly body = (instance: Luna): () => void => {
         return () => {
             instance.Client(this).on(this.name, (_oldMember: GuildMember, newMember: GuildMember) => {
-                const listener: Listener = instance.getListener(this.name);
+                const listener: Listener = instance.getListener(this, this.name);
                 if (newMember.id === newMember.guild.ownerID) listener.execute(instance, newMember)
             });
         }

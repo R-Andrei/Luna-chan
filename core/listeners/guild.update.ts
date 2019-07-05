@@ -10,7 +10,7 @@ class GuildUpdate extends Listener {
     public readonly body = (instance: Luna): () => void => {
         return () => {
             instance.Client(this).on(this.name, (_oldGuild: Guild, newGuild: Guild) => {
-                const listener: Listener = instance.getListener(this.name);
+                const listener: Listener = instance.getListener(this, this.name);
                 listener.execute(instance, newGuild);
             });
         }
