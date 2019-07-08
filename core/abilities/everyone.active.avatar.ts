@@ -9,6 +9,7 @@ class Avatar extends Ability {
     public readonly min_args: number = 1;
     public readonly usage: string = '@user_mention, or just !avatar';
     public readonly type: AbilityType = GuildActive;
+    public readonly alias: Array<string> = ['icon', 'profilepic', 'profileimage'];
     public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             const target: string = (args.length) ? args[0].replace(/[\<\@\!\>]+/g, '') : null;

@@ -10,6 +10,7 @@ class Stats extends Ability {
     public readonly min_args: number = 1;
     public readonly usage: string = '@user_mention, or just !stats';
     public readonly type: AbilityType = GuildActive;
+    public readonly alias: Array<string> = ['info', 'me', 'statsme', 'infome', 'profile'];
     public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             const target: string = (args.length) ? args[0].replace(/[\<\@\!\>]+/g, '') : null;

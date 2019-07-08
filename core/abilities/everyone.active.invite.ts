@@ -9,6 +9,7 @@ class Invite extends Ability {
     public readonly min_args: number = 0;
     public readonly usage: string = 'TBD';
     public readonly type: AbilityType = EveryoneActive;
+    public readonly alias: Array<string> = ['inviteme', 'getinvite', 'sendinvite'];
     public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             if (args.length) message.reply(`What do these even mean? '${args.join(', ')}'`)

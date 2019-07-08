@@ -9,6 +9,7 @@ class Kys extends Ability {
     public readonly min_args: number = 0;
     public readonly usage: string = 'TBD';
     public readonly type: AbilityType = { everyone: false, ownerOnly: true, guildOnly: false, active: true };
+    public readonly alias: Array<string> = ['doeet']
 
     public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((_resolve, reject) => {

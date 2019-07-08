@@ -11,6 +11,7 @@ class Hitme extends Ability {
     public readonly min_args: number = 0;
     public readonly usage: string = '';
     public readonly type: AbilityType = EveryoneActive
+    public readonly alias: Array<string> = ['oof', 'joke', 'jokepls', 'jokeplease', 'plsjoke', 'pun', 'jokeme', 'punme']
     public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             if (args.length) message.reply(`What do these even mean? '${args.join(', ')}'`).catch(err => console.log(err));

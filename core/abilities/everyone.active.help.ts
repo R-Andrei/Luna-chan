@@ -10,6 +10,7 @@ class Help extends Ability {
     public readonly min_args: number = 1;
     public readonly usage: string = 'TBD';
     public readonly type: AbilityType = EveryoneActive;
+    public readonly alias: Array<string> = ['helpme', 'ajutor', 'aaa', 'aaaa', 'needhelp']
     public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
 

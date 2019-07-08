@@ -11,11 +11,12 @@ class Gif extends Ability {
     public readonly min_args: number = 1;
     public readonly usage: string = '<tags> <*separated by spaces>';
     public readonly type: AbilityType = EveryoneActive;
+    public readonly alias: Array<string> = ['jif', 'movingimage', 'anime'];
     public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             const base_url = 'https://tenor.com';
             const options = { 
-                uri: `https://tenor.com/search/${args.join('-')}-gifs`, 
+                uri: `https://tenor.com/search/${['anime', ...args].join('-')}-gifs`, 
                 transform: (body: any) => { return load(body); } 
             };
             get(options).then((response: any) => {

@@ -1,4 +1,4 @@
-import { Client, Collection, Snowflake, Message, Guild, User } from 'discord.js';
+import { Client, Collection, Snowflake} from 'discord.js';
 import { cloud, token } from './config.json';
 import { StorageWorker } from './storage/luna.transactions';
 import { Logger } from './logging/logger.active';
