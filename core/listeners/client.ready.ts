@@ -8,9 +8,11 @@ class ClientReady extends Listener {
     public readonly description: string = 'Listener for ready login event.';
     public readonly body = (instance: Luna): () => void => {
         return () => {
+            // @ts-ignore
             const client = instance.get(this, 'client');
             if (client instanceof Client) {
                 client.on(this.name, () => {
+                    // @ts-ignore
                     const listener = instance.get(this, 'listener', this.name);
                     if (listener instanceof Listener) listener.execute(instance);
                 });
@@ -19,6 +21,7 @@ class ClientReady extends Listener {
     }
 
     public readonly execute = (instance: Luna): void => {
+        // @ts-ignore
         const client = instance.get(this, 'client');
         if (client instanceof Client) {
             console.log(`Logged in as ${client.user.tag}!`);

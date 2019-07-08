@@ -1,11 +1,11 @@
-import { Client, Collection, Snowflake } from 'discord.js';
+import { Client, Collection, Snowflake, Message, Guild, User } from 'discord.js';
 import { cloud, token } from './config.json';
 import { StorageWorker } from './storage/luna.transactions';
 import { Logger } from './logging/logger.active';
 import { readdirSync } from 'fs';
 import { Ability } from './abilities/template.ability';
 import { Listener } from './listeners/template.listener';
-import { Authorize, Validate } from './luna.decorators';
+import { Authorize, Validate, DbAuthorize } from './luna.decorators';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
@@ -24,14 +24,35 @@ export class Luna {
         this.init_traits('listeners');
     }
 
-    public readonly wake_up = (): void => {
-        this._storage.open_connection()
-            .then((result: string) => {
-                console.log(result);
-                this._client.login(token);
-        })
-        .catch((err: Error) => console.log(err));
-        
+    public readonly activate = (): void => {
+        // this._storage.open()
+        //     .then((result: string) => {
+        //         console.log(result);
+                
+        // })
+        // .catch((err: Error) => console.log(err));
+        this._client.login(token);
+    }
+
+    @Validate()
+    @Authorize()
+    public get(property: string, name?: string): Ability|Listener|Client {
+        return (property === 'client') ? this[`_${property}`] : this[`_${property}`].get(name);
+    }
+
+    @Validate()
+    @Authorize()
+    public set(property: string, name: string, value: Ability|Listener): void {
+        this[`_${property}`].set(name, value);
+    }
+
+    @DbAuthorize()
+    public async update(property: string, ...args: any[]): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this._storage[`update${property.charAt(0).toUpperCase() + property.slice(1)}`].apply(this._storage, args)
+                .then((result: string) => resolve(result))
+                .catch((error: Error) => reject(error));
+        });
     }
 
     public readonly init_traits = (type: string): void => {
@@ -49,18 +70,7 @@ export class Luna {
 
     public readonly addListener = (listener: () => void): void => { listener(); }
 
-    @Validate()
-    @Authorize()
-    public get(_token: Luna|Ability|Listener|StorageWorker, property: string, name?: string): Ability|Listener|Client {
-        return (property === 'client') ? this[`_${property}`] : this[`_${property}`].get(name);
-    }
-
-    @Validate()
-    @Authorize()
-    public set(_token: Luna|Ability|Listener|StorageWorker, property: string, name: string, value: Ability|Listener): void {
-        this[`_${property}`].set(name, value);
-    }
-
+   
 }
 
 

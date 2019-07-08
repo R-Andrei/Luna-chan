@@ -30,7 +30,7 @@ export function Authorize () {
         descriptor.value = function(token: Luna|Ability|Listener|StorageWorker, property: string, ...args: any[]) {
             if (token instanceof Luna || token instanceof Ability || token instanceof Listener || token instanceof StorageWorker){
                 let newArgs: any[] = [];
-                newArgs.push(token);
+                // newArgs.push(token);
                 newArgs.push(property);
                 args.forEach(item => newArgs.push(item));
                 return original.apply(this, newArgs);
@@ -38,5 +38,21 @@ export function Authorize () {
             return new Error('Could not get client. Access is restricted.');
         }
         return descriptor;
+    }
+}
+
+export function DbAuthorize() {
+    return (_target: Object, _key: any, descriptor?: PropertyDescriptor) : PropertyDescriptor => {
+        const original = descriptor.value;
+        descriptor.value = function(token: Listener | Luna, property: string, ...args: any[]) {
+            if (token instanceof Listener || token instanceof Luna) {
+                let newArgs: any[] = [];
+                newArgs.push(property);
+                newArgs.push(args);
+                return original.apply(this, newArgs);
+            }
+            return new Error('Could not verify source. Access is restricted');
+        }
+        return descriptor
     }
 }

@@ -10,9 +10,11 @@ class MemberJoin extends Listener {
 
     public readonly body = (instance: Luna): () => void => {
         return () => {
+            // @ts-ignore
             const client: Listener|Ability|Client = instance.get(this, 'client');
             if (client instanceof Client) {
                 client.on(this.name, (member: GuildMember) => {
+                    // @ts-ignore
                     const listener: Listener|Ability|Client = instance.get(this, 'listener', this.name);
                     if (listener instanceof Listener) listener.execute(instance, member);
                 });
@@ -21,9 +23,10 @@ class MemberJoin extends Listener {
     }
 
     public readonly execute = (instance: Luna, member: GuildMember): void => {
-        // instance.storage.update_server(member.guild, 'server_info')
-        //     .then((result: string) => console.log(result))
-        //     .catch((err: Error) => console.log(err)); //TODO PRIVATE STORAGE ACCESS
+        // @ts-ignore
+        instance.updateServer(this, member.guild, 'server_info')
+            .then((result: string) => console.log(result))
+            .catch((err: Error) => console.log(err));
     }
 }
 

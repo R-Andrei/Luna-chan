@@ -11,10 +11,12 @@ class MessageAdd extends Listener {
 
     public readonly body = (instance: Luna): () => void => {
         return () => {
+            // @ts-ignore
             const client: Ability|Listener|Client = instance.get(this, 'client');
             if (client instanceof Client) {
                 client.on(this.name, (message: Message) => {
                     if (!message.author.bot) {
+                        // @ts-ignore
                         const listener: Ability|Listener|Client = instance.get(this, 'listener', this.name);
                         if (listener instanceof Listener) {
                             if (message.content.startsWith(prefix)) {
@@ -35,6 +37,7 @@ class MessageAdd extends Listener {
     }
 
     public readonly execute = (instance: Luna, command: string, args: string[], message: Message): void => {
+        // @ts-ignore
         const ability: Ability|Listener|Client = instance.get(this, 'ability', command);
         if (ability instanceof Ability) {
             ability.execute(message, ...args)
@@ -53,12 +56,14 @@ class MessageAdd extends Listener {
     }
 
     public readonly fake_execute = (instance: Luna, command: string, args: string[], message: Message): void => {
+        // @ts-ignore
         const ability: Ability|Listener|Client = instance.get(this, 'ability', command);
         if (ability instanceof Ability) ability.execute(message);
     }
 
     public readonly passive_execute = (instance: Luna, message: Message): void => {
         let ability: Ability|Listener|Client;
+        // @ts-ignore
         if (message.mentions.everyone) ability = instance.get(this, 'ability', 'reee');
         if (ability === null) return;
 

@@ -9,9 +9,11 @@ class ReactionAdd extends Listener {
 
     public readonly body = (instance: Luna): () => void => {
         return () => {
+            // @ts-ignore
             const client = instance.get(this, 'client');
             if (client instanceof Client) {
                 client.on(this.name, (reaction: MessageReaction, user: User) => {
+                    // @ts-ignore
                     const listener = instance.get(this, 'listener', this.name);
                     if (listener instanceof Listener) listener.execute(instance, reaction, user);
                 });
