@@ -24,7 +24,7 @@ class MemberJoin extends Listener {
 
     public readonly execute = (instance: Luna, member: GuildMember): void => {
         // @ts-ignore
-        instance.updateServer(this, member.guild, 'server_info')
+        instance.update(this, 'server', member.guild, 'server_info')
             .then((result: string) => console.log(result))
             .catch((err: Error) => console.log(err));
     }

@@ -24,7 +24,7 @@ class GuildUpdate extends Listener {
 
     public readonly execute = (instance: Luna, newGuild: Guild): void => {
         // @ts-ignore
-        instance.updateServer(this, newGuild, 'server_info')
+        instance.update(this, 'server', newGuild, 'server_info')
             .then((result: string) => console.log(result))
             .catch((err: Error) => console.log(err));
     }

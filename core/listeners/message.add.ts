@@ -43,9 +43,10 @@ class MessageAdd extends Listener {
             ability.execute(message, ...args)
             .then((result: Message|Message[]) => {
                 instance.logger.log_ability_success(result, message, ability);
-                // instance.storage.update_ability(message, ability) //TODO STORAGE PRIVATE ACCESS
-                //     .then((result: string) => console.log(result))
-                //     .catch((err: Error) => instance.logger.log_ability_error(message, ability, 'transaction', err));
+                // @ts-ignore
+                instance.update(this, 'ability', message, ability)
+                    .then((result: string) => console.log(result))
+                    .catch((err: Error) => instance.logger.log_ability_error(message, ability, 'transaction', err));
             })
             .catch((err: Error) => {
                 instance.logger.log_ability_error(message, ability, 'ability', err);
