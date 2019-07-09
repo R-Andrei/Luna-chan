@@ -87,6 +87,20 @@ export class StorageWorker {
         });
     }
 
+    public readonly getUsed = async (user: User) : Promise<string> => {
+        const collection = this.database.collection(this.collections.abilities);
+        return new Promise((resolve, reject) => {
+            const ability = collection.aggregate([
+                {$match: {"user": `${user}`}}, 
+                {$group: {_id: "$ability", count: {$sum: 1}}}, 
+                {$sort: {count: -1}}, 
+                {$limit: 1}
+            ]).toArray()
+                .then((result: Array<any>) => (result.length) ? resolve(result[0]) : reject(new Error('No abilities found for user.')))
+                .catch((error: Error) => reject(error));
+        });
+    }
+
     public readonly close_connection = async (): Promise<string> => {
         return new Promise((resolve, reject) => {
             this.client.close()
