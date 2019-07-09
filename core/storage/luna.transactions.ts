@@ -90,7 +90,7 @@ export class StorageWorker {
     public readonly getUsed = async (user: User) : Promise<string> => {
         const collection = this.database.collection(this.collections.abilities);
         return new Promise((resolve, reject) => {
-            const ability = collection.aggregate([
+            collection.aggregate([
                 {$match: {"user": `${user}`}}, 
                 {$group: {_id: "$ability", count: {$sum: 1}}}, 
                 {$sort: {count: -1}}, 
