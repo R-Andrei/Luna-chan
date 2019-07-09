@@ -1,5 +1,6 @@
 import { AbilityType } from '../types'
 import { Message } from 'discord.js';
+import { Luna } from '../luna';
 
 export class Ability {
     public readonly name: string;
@@ -9,6 +10,6 @@ export class Ability {
     public readonly usage: string;
     public readonly type: AbilityType;
     public readonly alias?: Array<string>
-    public execute: (message: Message, ...args: string[]) => Promise<Message|Message[]>
+    public execute: (message: Message, instance?: Luna, ...args: string[]) => Promise<Message|Message[]>
 }
 

@@ -3,6 +3,7 @@ import { load } from 'cheerio';
 import { Ability } from './template.ability';
 import { AbilityType, EveryoneActive } from '../types';
 import { Message, Channel } from 'discord.js';
+import { Luna } from '../luna';
 
 class Hitme extends Ability {
     public readonly name: string = 'hitme';
@@ -12,7 +13,7 @@ class Hitme extends Ability {
     public readonly usage: string = '';
     public readonly type: AbilityType = EveryoneActive
     public readonly alias: Array<string> = ['oof', 'joke', 'jokepls', 'jokeplease', 'plsjoke', 'pun', 'jokeme', 'punme']
-    public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             if (args.length) message.reply(`What do these even mean? '${args.join(', ')}'`).catch(err => console.log(err));
             const options = { uri: 'https://www.goodbadjokes.com/', transform: (body: any) => { return load(body); } }

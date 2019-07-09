@@ -1,6 +1,7 @@
 import { Ability } from './template.ability';
 import { AbilityType, GuildPassive } from '../types';
 import { Message, MessageReaction } from 'discord.js';
+import { Luna } from '../luna';
 
 class Clear extends Ability {
     public readonly name: string = 'reee';
@@ -10,7 +11,7 @@ class Clear extends Ability {
     public readonly usage: string = 'uses itself';
     public readonly type: AbilityType = GuildPassive;
 
-    public readonly execute = async (message: Message, ..._args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ..._args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             message.react('\u{1F621}')
                 .then((_result: MessageReaction) => message.channel.send(`Reeeeee!\nWas that necessary? :unamused:`)

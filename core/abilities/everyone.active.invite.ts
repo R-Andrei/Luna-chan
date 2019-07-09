@@ -1,6 +1,7 @@
 import { Ability } from './template.ability';
 import { AbilityType, EveryoneActive } from '../types';
 import { Message } from 'discord.js';
+import { Luna } from '../luna';
 
 class Invite extends Ability {
     public readonly name: string = 'invite';
@@ -10,7 +11,7 @@ class Invite extends Ability {
     public readonly usage: string = 'TBD';
     public readonly type: AbilityType = EveryoneActive;
     public readonly alias: Array<string> = ['inviteme', 'getinvite', 'sendinvite'];
-    public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             if (args.length) message.reply(`What do these even mean? '${args.join(', ')}'`)
                 .catch((err: Error) => console.log(err));

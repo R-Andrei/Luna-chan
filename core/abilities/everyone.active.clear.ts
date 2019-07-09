@@ -1,6 +1,7 @@
 import { Ability } from './template.ability';
 import { AbilityType, GuildActive } from '../types';
 import { Message } from 'discord.js';
+import { Luna } from '../luna';
 
 class Clear extends Ability {
     public readonly name: string = 'clear';
@@ -10,7 +11,7 @@ class Clear extends Ability {
     public readonly usage: string = 'TBD';
     public readonly type: AbilityType = GuildActive;
     public readonly alias: Array<string> = ['clearmessage', 'clearmessages', 'clearchat'];
-    public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
 
         });

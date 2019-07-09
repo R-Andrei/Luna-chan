@@ -3,6 +3,7 @@ import { load } from 'cheerio';
 import { Ability } from './template.ability';
 import { AbilityType, EveryoneActive } from '../types';
 import { Message } from 'discord.js';
+import { Luna } from '../luna';
 
 class Gif extends Ability {
     public readonly name: string = 'gif';
@@ -12,7 +13,7 @@ class Gif extends Ability {
     public readonly usage: string = '<tags> <*separated by spaces>';
     public readonly type: AbilityType = EveryoneActive;
     public readonly alias: Array<string> = ['jif', 'movingimage', 'anime'];
-    public readonly execute = async (message: Message, ...args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message|Message[]> => {
         return new Promise((resolve, reject) => {
             const base_url = 'https://tenor.com';
             const options = { 
