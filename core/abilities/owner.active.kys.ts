@@ -17,8 +17,8 @@ class Kys extends Ability {
             if (args.length) message.reply(`What'd you give me those for? '${args.join(', ')}'`)
                 .catch((err: Error) => console.log(err));
             return message.reply('Hold on im gonna go kms.')
-                .then((sent: Message) => {
-                    console.log(`Killed myself per ${sent.author.tag}'s instructions.`);
+                .then((_sent: Message) => {
+                    console.log(`Killed myself per ${message.author.tag}'s instructions.`);
                     process.exit();
                 })
                 .catch((err: Error) => reject(err));
