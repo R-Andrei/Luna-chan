@@ -18,7 +18,7 @@ export class Luna {
     private _abilities: Collection<Snowflake, Ability> = new Collection();
     private _listeners: Collection<Snowflake, Listener> = new Collection();
 
-    public readonly logger: Logger = new Logger(); //TODO make logger private
+    public readonly logger: Logger = new Logger(); //TODO outsorce logger -> decorators
 
     constructor () {
         this.init_traits('abilities');
@@ -26,13 +26,13 @@ export class Luna {
     }
 
     public readonly activate = (): void => {
-        // this._storage.open()
-        //     .then((result: string) => {
-        //         console.log(result);
-                
-        // })
-        // .catch((err: Error) => console.log(err));
-        this._client.login(token);
+        this._storage.open()
+            .then((result: string) => {
+                console.log(result);
+                this._client.login(token);
+        })
+        .catch((err: Error) => console.log(err));
+        
     }
 
     @Validate()
@@ -72,7 +72,6 @@ export class Luna {
 
     public readonly addListener = (listener: () => void): void => { listener(); }
 
-   
 }
 
 
