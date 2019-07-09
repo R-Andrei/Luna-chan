@@ -5,7 +5,8 @@ import { Logger } from './logging/logger.active';
 import { readdirSync } from 'fs';
 import { Ability } from './abilities/template.ability';
 import { Listener } from './listeners/template.listener';
-import { Authorize, Validate, DbAuthorize } from './luna.decorators';
+import { Authorize, Validate } from './luna.decorators';
+import { Generic } from './types.js';
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 
@@ -36,8 +37,9 @@ export class Luna {
 
     @Validate()
     @Authorize()
-    public get(property: string, name?: string): Ability|Listener|Client {
-        return (property === 'client') ? this[`_${property}`] : this[`_${property}`].get(name);
+    public get(property: string, name?: string): Ability|Listener|Client|Collection<Snowflake,Ability> {
+        return (name === undefined) ? (this[`_${property}`]) : 
+           ((this[`_${property}`] instanceof Collection) ? this[`_${property}`].get(name) : this[`_${property}`][name]);
     }
 
     @Validate()
@@ -46,7 +48,7 @@ export class Luna {
         this[`_${property}`].set(name, value);
     }
 
-    @DbAuthorize()
+    @Authorize()
     public async update(property: string, ...args: any[]): Promise<string> {
         return new Promise((resolve, reject) => {
             this._storage[`update${property.charAt(0).toUpperCase() + property.slice(1)}`].apply(this._storage, args)
