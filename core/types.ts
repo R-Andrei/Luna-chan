@@ -1,6 +1,6 @@
 //global
 export interface Generic {
-    [property_name : string]: string;
+    [property_name : string]: any;
 }
 
 
