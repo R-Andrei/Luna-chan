@@ -2,7 +2,7 @@ import { Ability } from '../abilities/template.ability.js';
 import { Listener } from './template.listener.js';
 import { prefix } from '../prefixes.json'
 import { Luna } from '../luna'
-import { Message, Client } from 'discord.js';
+import { Message, Client, Collection } from 'discord.js';
 
 
 class MessageAdd extends Listener {
@@ -38,25 +38,28 @@ class MessageAdd extends Listener {
 
     public readonly execute = (instance: Luna, command: string, args: string[], message: Message): void => {
         // @ts-ignore
-        const ability: Ability|Listener|Client = instance.get(this, 'ability', command);
-        if (ability instanceof Ability) {
-            ability.execute(message, ...args)
-            .then((result: Message|Message[]) => {
-                instance.logger.log_ability_success(result, message, ability);
-                // @ts-ignore
-                instance.update(this, 'ability', message, ability)
-                    .then((result: string) => console.log(result))
-                    .catch((err: Error) => instance.logger.log_ability_error(message, ability, 'transaction', err));
-            })
-            .catch((err: Error) => {
-                instance.logger.log_ability_error(message, ability, 'ability', err);
-                message.reply(`Woah that spectacularly didn\'t work out! Sure u were using it like this? ${prefix}${ability.name} ${ability.usage}`)
-                    .catch((err: Error) => console.log(err));
-            });
+        const abilities = instance.get(this, 'ability');
+        if (abilities instanceof Collection) {
+            const ability = abilities.get(command) || abilities.find(item => item.alias && item.alias.includes(command));
+            if (ability instanceof Ability) {
+                ability.execute(message, instance, ...args)
+                .then((result: Message|Message[]) => {
+                    instance.logger.log_ability_success(result, message, ability);
+                    // @ts-ignore
+                    instance.update(this, 'ability', message, ability)
+                        .then((result: string) => console.log(result))
+                        .catch((err: Error) => instance.logger.log_ability_error(message, ability, 'transaction', err));
+                })
+                .catch((err: Error) => {
+                    instance.logger.log_ability_error(message, ability, 'ability', err);
+                    message.reply(`Woah that spectacularly didn\'t work out! Sure u were using it like this? ${prefix}${ability.name} ${ability.usage}`)
+                        .catch((err: Error) => console.log(err));
+                });
+            }
         }
     }
 
-    public readonly fake_execute = (instance: Luna, command: string, args: string[], message: Message): void => {
+    public readonly fake_execute = (instance: Luna, command: string, _args: string[], message: Message): void => {
         // @ts-ignore
         const ability: Ability|Listener|Client = instance.get(this, 'ability', command);
         if (ability instanceof Ability) ability.execute(message);
