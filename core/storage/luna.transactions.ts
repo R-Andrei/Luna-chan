@@ -1,5 +1,5 @@
 import { MongoClient, Db, InsertOneWriteOpResult, FindAndModifyWriteOpResultObject } from 'mongodb';
-import { Message, TextChannel, DMChannel, GroupDMChannel, Guild } from 'discord.js';
+import { Message, TextChannel, DMChannel, GroupDMChannel, Guild, User } from 'discord.js';
 import { Generic, SetServerRecord, AbilityRecord } from '../types'
 import { Ability } from '../abilities/template.ability';
 
@@ -75,6 +75,15 @@ export class StorageWorker {
             )
             .catch((err: Error) => reject(err));
 
+        });
+    }
+
+    public readonly getMessages = async (user: User): Promise<number> => {
+        const collection = this.database.collection(this.collections.abilities);
+        return new Promise((resolve, reject) => {
+            collection.countDocuments({ "user": user.tag})
+                .then((result: number) => resolve(result))
+                .catch((error: Error) => reject(error));
         });
     }
 
