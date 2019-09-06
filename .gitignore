@@ -2,5 +2,5 @@ compiled/
 !compiled/.gitkeep
 .vscode
 *.yml
-node_modules
 core/config.json
+node_modules/
