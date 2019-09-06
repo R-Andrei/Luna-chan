@@ -12,7 +12,7 @@ class Help extends Ability {
     public readonly usage: string = 'TBD';
     public readonly type: AbilityType = EveryoneActive;
     public readonly alias: Array<string> = ['helpme', 'ajutor', 'aaa', 'aaaa', 'needhelp']
-    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message | Message[]> => {
         return new Promise((resolve, reject) => {
 
         });

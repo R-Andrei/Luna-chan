@@ -5,5 +5,4 @@ export class Listener {
     public readonly description: string;
     public readonly body: (instance: Luna) => () => void;
     public readonly execute: (instance: Luna, ...args: any[]) => any;
-    
 }

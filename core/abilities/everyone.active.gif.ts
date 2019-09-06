@@ -13,12 +13,12 @@ class Gif extends Ability {
     public readonly usage: string = '<tags> <*separated by spaces>';
     public readonly type: AbilityType = EveryoneActive;
     public readonly alias: Array<string> = ['jif', 'movingimage', 'anime'];
-    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message | Message[]> => {
         return new Promise((resolve, reject) => {
             const base_url = 'https://tenor.com';
-            const options = { 
-                uri: `https://tenor.com/search/${['anime', ...args].join('-')}-gifs`, 
-                transform: (body: any) => { return load(body); } 
+            const options = {
+                uri: `https://tenor.com/search/${['anime', ...args].join('-')}-gifs`,
+                transform: (body: any) => { return load(body); }
             };
             get(options).then((response: any) => {
                 const random: number = Math.floor(Math.random() * Math.floor(response('.GifListItem').length - 1));

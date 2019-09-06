@@ -1,11 +1,6 @@
-run.js
-core/*.js
-core/config.json
-core/logging/*.js
-core/storage/*.js
-core/listeners/*.js
-core/abilities/*.js
 compiled/
 !compiled/.gitkeep
 .vscode
 *.yml
+node_modules
+core/config.json

@@ -1,4 +1,4 @@
-import { Client, Collection, Snowflake} from 'discord.js';
+import { Client, Collection, Snowflake } from 'discord.js';
 import { cloud, token } from './config.json';
 import { StorageWorker } from './storage/luna.transactions';
 import { Logger } from './logging/logger.active';
@@ -20,7 +20,7 @@ export class Luna {
 
     public readonly logger: Logger = new Logger(); //TODO outsorce logger -> decorators
 
-    constructor () {
+    constructor() {
         this.init_traits('abilities');
         this.init_traits('listeners');
     }
@@ -30,21 +30,21 @@ export class Luna {
             .then((result: string) => {
                 console.log(result);
                 this._client.login(token);
-        })
-        .catch((err: Error) => console.log(err));
-        
+            })
+            .catch((err: Error) => console.log(err));
+
     }
 
     @Validate()
     @Authorize()
-    public get(property: string, name?: string): Ability|Listener|Client|Collection<Snowflake,Ability> {
-        return (name === undefined) ? (this[`_${property}`]) : 
-           ((this[`_${property}`] instanceof Collection) ? this[`_${property}`].get(name) : this[`_${property}`][name]);
+    public get(property: string, name?: string): Ability | Listener | Client | Collection<Snowflake, Ability> {
+        return (name === undefined) ? (this[`_${property}`]) :
+            ((this[`_${property}`] instanceof Collection) ? this[`_${property}`].get(name) : this[`_${property}`][name]);
     }
 
     @Validate()
     @Authorize()
-    public set(property: string, name: string, value: Ability|Listener): void {
+    public set(property: string, name: string, value: Ability | Listener): void {
         this[`_${property}`].set(name, value);
     }
 
@@ -59,7 +59,7 @@ export class Luna {
 
     public readonly init_traits = (type: string): void => {
         const traits: string[] = readdirSync(`./core/${type}`)
-            .filter((file: string) => {return (file.endsWith('.ts') && !file.startsWith('template'))});
+            .filter((file: string) => { return (file.endsWith('.ts') && !file.startsWith('template')) });
         for (let traitFile of traits) {
             import(`./${type}/${traitFile.replace(/\.ts$/s, '')}`)
                 .then((file: any) => {

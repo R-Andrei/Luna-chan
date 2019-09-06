@@ -11,12 +11,12 @@ class MemberUpdate extends Listener {
     public readonly body = (instance: Luna): () => void => {
         return () => {
             // @ts-ignore
-            const client: Listener|Ability|Client = instance.get(this, 'client');
+            const client: Listener | Ability | Client = instance.get(this, 'client');
             if (client instanceof Client) {
                 client.on(this.name, (_oldMember: GuildMember, newMember: GuildMember) => {
                     // @ts-ignore
-                    const listener: Listener|Ability|Client = instance.get(this, 'listener', this.name);
-                    if (listener instanceof Listener && newMember.id === newMember.guild.ownerID) 
+                    const listener: Listener | Ability | Client = instance.get(this, 'listener', this.name);
+                    if (listener instanceof Listener && newMember.id === newMember.guild.ownerID)
                         listener.execute(instance, newMember)
                 });
             }

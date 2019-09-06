@@ -12,12 +12,12 @@ class Stats extends Ability {
     public readonly usage: string = '@user_mention, or just !stats';
     public readonly type: AbilityType = GuildActive;
     public readonly alias: Array<string> = ['info', 'me', 'statsme', 'infome', 'profile'];
-    public readonly execute = async (message: Message, instance: Luna, ...args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, instance: Luna, ...args: string[]): Promise<Message | Message[]> => {
         return new Promise((resolve, reject) => {
-            
+
             const target: string = (args.length) ? args[0].replace(/[\<\@\!\>]+/g, '') : null;
-            const member: GuildMember = (args.length) 
-                ? message.guild.members.find((user: GuildMember) => user.id == target) 
+            const member: GuildMember = (args.length)
+                ? message.guild.members.find((user: GuildMember) => user.id == target)
                 : message.guild.members.find((user: GuildMember) => user.id === message.author.id);
             const embed: RichEmbed = new RichEmbed()
                 .setColor(`${member.displayHexColor}`)

@@ -12,7 +12,7 @@ class Kys extends Ability {
     public readonly type: AbilityType = { everyone: false, ownerOnly: true, guildOnly: false, active: true };
     public readonly alias: Array<string> = ['doeet']
 
-    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message | Message[]> => {
         return new Promise((_resolve, reject) => {
             if (args.length) message.reply(`What'd you give me those for? '${args.join(', ')}'`)
                 .catch((err: Error) => console.log(err));

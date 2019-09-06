@@ -11,13 +11,13 @@ class Clear extends Ability {
     public readonly usage: string = 'uses itself';
     public readonly type: AbilityType = GuildPassive;
 
-    public readonly execute = async (message: Message, _instance: Luna, ..._args: string[]): Promise<Message|Message[]> => {
+    public readonly execute = async (message: Message, _instance: Luna, ..._args: string[]): Promise<Message | Message[]> => {
         return new Promise((resolve, reject) => {
             message.react('\u{1F621}')
                 .then((_result: MessageReaction) => message.channel.send(`Reeeeee!\nWas that necessary? :unamused:`)
                     .then((result: Message) => resolve(result))
                     .catch((err: Error) => reject(err))
-                ).catch((err: Error) => reject(err));   
+                ).catch((err: Error) => reject(err));
         });
     }
 }
