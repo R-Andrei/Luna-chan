@@ -6,18 +6,20 @@ import { readdirSync } from 'fs';
 import { Listener } from './listeners/template.listener';
 import { Ability } from './abilities/template.ability';
 import { Authorize, Validate } from './luna.decorators';
-import { Logger } from './logging/logger';
+import { Logger } from './logging/logging'
 import { TOKEN } from '../config';
+import { Db } from './logging/db';
 
 
 export class Luna {
 
     private readonly _client: Client = new Client();
+    private readonly _database: Db = new Db();
 
     private _abilities: Collection<Snowflake, Ability> = new Collection();
     private _listeners: Collection<Snowflake, Listener> = new Collection();
 
-    public readonly logger: Logger = new Logger();
+    public readonly logger: Logger = new Logger(this, this._database);
 
     constructor() {
         this.init_traits('abilities');
@@ -26,10 +28,13 @@ export class Luna {
 
     public readonly activate = (): void => {
         this._client.login(TOKEN)
-            .then((_: string) => console.log('Logged in as Luna-Chan!'))
+            .then((_: string) => {
+                this._client.user.setActivity('with your feelings');
+                console.log('Logged in as Luna-Chan!');
+            })
             .catch((error) => console.log(error));
-        this.logger.connect()
-            .then((_:boolean) => console.log('Connected to db!'))
+        this._database.connect()
+            .then((_: boolean) => console.log('Connected to db!'))
             .catch(error => console.log(error));
     }
 
