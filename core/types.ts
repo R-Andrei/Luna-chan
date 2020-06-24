@@ -64,3 +64,19 @@ export const GuildPassive: AbilityType = {
     guildOnly: true,
     active: false
 }
+
+
+// logging
+export interface LogRecord {
+    active: boolean,
+    timestamp: Date,
+    ability: string,
+    error: boolean,
+    user: string,
+    userid: string,
+    guild: string,
+    guildid: string,
+    channel: string,
+    channelid: string,
+    info: string
+}

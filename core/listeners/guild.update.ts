@@ -22,11 +22,12 @@ class GuildUpdate extends Listener {
         }
     }
 
-    public readonly execute = (instance: Luna, newGuild: Guild): void => {
+    public readonly execute = (_instance: Luna, newGuild: Guild): void => {
+        // execute code after cast
         // @ts-ignore
-        instance.update(this, 'server', newGuild, 'server_info')
-            .then((result: string) => console.log(result))
-            .catch((err: Error) => console.log(err));
+        // instance.update(this, 'server', newGuild, 'server_info')
+        //     .then((result: string) => console.log(result))
+        //     .catch((err: Error) => console.log(err));
     }
 }
 

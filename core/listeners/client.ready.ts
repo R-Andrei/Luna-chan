@@ -20,13 +20,15 @@ class ClientReady extends Listener {
         }
     }
 
-    public readonly execute = (instance: Luna): void => {
-        // @ts-ignore
-        const client = instance.get(this, 'client');
-        if (client instanceof Client) {
-            console.log(`Logged in as ${client.user.tag}!`);
-            client.user.setActivity('with your feelings');
-        }
+    public readonly execute = (_instance: Luna): void => {
+        // execute code after cast
+
+        // // @ts-ignore
+        // const client = instance.get(this, 'client');
+        // if (client instanceof Client) {
+        //     console.log(`Logged in as ${client.user.tag}!`);
+        //     client.user.setActivity('with your feelings');
+        // }
     }
 }
 
