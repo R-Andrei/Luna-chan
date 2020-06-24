@@ -43,15 +43,11 @@ class MessageAdd extends Listener {
             const ability = abilities.get(command) || abilities.find(item => item.alias && item.alias.includes(command));
             if (ability instanceof Ability) {
                 ability.execute(message, instance, ...args)
-                    .then((result: Message | Message[]) => {
-                        instance.logger.log_ability_success(result, message, ability);
-                        // @ts-ignore
-                        instance.update(this, 'ability', message, ability)
-                            .then((result: string) => console.log(result))
-                            .catch((err: Error) => instance.logger.log_ability_error(message, ability, 'transaction', err));
-                    })
+                    .then((result: Message | Message[]) =>
+                        instance.logger.log(message, ability, null, result)
+                    )
                     .catch((err: Error) => {
-                        instance.logger.log_ability_error(message, ability, 'ability', err);
+                        instance.logger.log(message, ability, err);
                         message.reply(`Woah that spectacularly didn\'t work out! Sure u were using it like this? ${prefix}${ability.name} ${ability.usage}`)
                             .catch((err: Error) => console.log(err));
                     });
@@ -66,13 +62,15 @@ class MessageAdd extends Listener {
     }
 
     public readonly passive_execute = (instance: Luna, message: Message): void => {
-        let ability: Ability | Listener | Client;
+        let ability: Ability;
         // @ts-ignore
         if (message.mentions.everyone) ability = instance.get(this, 'ability', 'reee');
         if (ability === null) return;
 
         if (ability instanceof Ability) ability.execute(message)
-            .then((_result: Message | Message[]) => { })
+            .then((result: Message | Message[]) => {
+                instance.logger.log(message, ability, null, result);
+            })
             .catch((err: Error) => console.log(err));
     }
 }

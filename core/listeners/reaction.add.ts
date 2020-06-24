@@ -21,8 +21,8 @@ class ReactionAdd extends Listener {
         }
     }
 
-    public readonly execute = (instance: Luna, command: string, reaction: MessageReaction, user: User): void => {
-        console.log(instance, reaction, user, command);
+    public readonly execute = (_instance: Luna, _command: string, _reaction: MessageReaction, _user: User): void => {
+        // execute code after cast
     }
 }
 

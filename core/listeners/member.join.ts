@@ -22,11 +22,12 @@ class MemberJoin extends Listener {
         }
     }
 
-    public readonly execute = (instance: Luna, member: GuildMember): void => {
+    public readonly execute = (_instance: Luna, _member: GuildMember): void => {
+        // execute code after cast
         // @ts-ignore
-        instance.update(this, 'server', member.guild, 'server_info')
-            .then((result: string) => console.log(result))
-            .catch((err: Error) => console.log(err));
+        // instance.update(this, 'server', member.guild, 'server_info')
+        //     .then((result: string) => console.log(result))
+        //     .catch((err: Error) => console.log(err));
     }
 }
 

@@ -1,6 +1,8 @@
 compiled/
 !compiled/.gitkeep
-.vscode
-*.yml
-core/config.json
+core/logging/db/
 node_modules/
+.vscode/
+
+*.yml
+.env
