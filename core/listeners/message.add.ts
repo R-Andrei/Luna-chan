@@ -1,8 +1,12 @@
+import { Channel, TextChannel, Message, Client, Collection } from 'discord.js';
+
 import { Ability } from '../abilities/template.ability.js';
+import { c_errors } from '../utility/condescending.phrases';
+import { i_errors } from '../utility/interrogative.phrases';
+import { random } from '../utility/numbers';
 import { Listener } from './template.listener.js';
 import { prefix, settings } from '../prefixes.json'
 import { Luna } from '../luna'
-import { Message, Client, Collection } from 'discord.js';
 
 
 class MessageAdd extends Listener {
@@ -38,19 +42,40 @@ class MessageAdd extends Listener {
     }
 
     public readonly execute = (instance: Luna, command: string, args: string[], message: Message): void => {
+
         // @ts-ignore
         const abilities: Collection<Ability> = instance.get(this, 'ability');
         const ability: Ability | null = abilities.get(command) || abilities.find((item: Ability) => item.alias && item.alias.includes(command));
+
         if (ability instanceof Ability) {
-            ability.execute(message, instance, ...args)
-                .then((result: Message | Message[]) =>
-                    instance.logger.logAbility(message, ability, null, result)
-                )
-                .catch((error: Error) => {
-                    instance.logger.logAbility(message, ability, error);
-                    message.reply(`Woah that spectacularly didn\'t work out! Sure u were using it like this? ${prefix}${ability.name} ${ability.usage}`)
-                        .catch((error: Error) => console.log(error));
-                });
+            const target_channel: Channel = message.client.channels.get(message.channel.id)
+
+            if (args.length < ability.min_args) {
+                const c_pos: number = random(0, c_errors.length - 1);
+                (target_channel as TextChannel).send(c_errors[c_pos])
+                    .then((_sent: Message) => {
+                        instance.logger.logAbility(message, ability, new Error(`Argument Error: missing arguments. Got ${args.length} out of ${ability.min_args}.`));
+                        (target_channel as TextChannel).send(`You're supposed to be using it like this: ${prefix}${ability.name} ${ability.usage}`);
+                    })
+                    .catch((error: Error) => console.log(error));
+            }
+
+
+            else
+                ability.execute(message, instance, ...args)
+                    .then((result: Message | Message[]) =>
+                        instance.logger.logAbility(message, ability, null, result)
+                    )
+                    .catch((error: Error) => {
+                        console.log(error);
+                        instance.logger.logAbility(message, ability, error);
+                        const i_pos: number = random(0, i_errors.length - 1);
+                        (target_channel as TextChannel).send(`${i_errors[i_pos]} That didn't work out.`)
+                            .then((_sent: Message) => {
+                                (target_channel as TextChannel).send(`Sure you were using it like this? ${prefix}${ability.name} ${ability.usage}`);
+                            })
+                            .catch((error: Error) => console.log(error));
+                    });
         }
     }
 

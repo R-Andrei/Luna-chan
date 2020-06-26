@@ -4,15 +4,15 @@ import { LogRecord } from '../types';
 import { Message, TextChannel, DMChannel, GroupDMChannel } from 'discord.js';
 import { Ability } from '../abilities/template.ability';
 import { Luna } from '../luna';
-import { Db } from './db';
+import { Database } from './db';
 
 
 export class Logger {
 
     private readonly _luna: Luna;
-    private readonly _database: Db;
+    private readonly _database: Database;
 
-    constructor(instance: Luna, db: Db) {
+    constructor(instance: Luna, db: Database) {
         this._luna = instance;
         this._database = db;
     }
@@ -35,7 +35,7 @@ export class Logger {
             info: ''
         }
         this._database.logAbility(abilityLog)
-            .then(_ => console.log(`${moment(abilityLog.timestamp).format('YYYY-MM-DD, h:mm:ss a')}: successfully logged action.`))
+            .then(_ => console.log(`${moment(abilityLog.timestamp).format('YYYY-MM-DD, h:mm:ss a')}: successfully logged ${(abilityLog.error) ? 'error' : 'action'}.`))
             .catch(error => console.error(error));
     }
 

@@ -80,3 +80,11 @@ export interface LogRecord {
     channelid: string,
     info: string
 }
+
+export interface AnimeRecord {
+    id: number,
+    score: number,
+    title: string,
+    cover: string,
+    [property_name: string]: any
+}
