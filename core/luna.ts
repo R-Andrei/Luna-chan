@@ -1,23 +1,24 @@
 import { Client, Collection, Snowflake } from 'discord.js';
 import { readdirSync } from 'fs';
 
-
-
+import { AnimeRecord } from './types';
 import { Listener } from './listeners/template.listener';
 import { Ability } from './abilities/template.ability';
 import { Authorize, Validate } from './luna.decorators';
-import { Logger } from './logging/logger';
+import { Logger } from './logging/logging'
 import { TOKEN } from '../config';
+import { Database } from './logging/db';
 
 
 export class Luna {
 
     private readonly _client: Client = new Client();
+    private readonly _database: Database = new Database();
 
     private _abilities: Collection<Snowflake, Ability> = new Collection();
     private _listeners: Collection<Snowflake, Listener> = new Collection();
 
-    public readonly logger: Logger = new Logger();
+    public readonly logger: Logger = new Logger(this, this._database);
 
     constructor() {
         this.init_traits('abilities');
@@ -26,10 +27,13 @@ export class Luna {
 
     public readonly activate = (): void => {
         this._client.login(TOKEN)
-            .then((_: string) => console.log('Logged in as Luna-Chan!'))
+            .then((_: string) => {
+                this._client.user.setActivity('with your feelings');
+                console.log('Logged in as Luna-Chan!');
+            })
             .catch((error) => console.log(error));
-        this.logger.connect()
-            .then((_:boolean) => console.log('Connected to db!'))
+        this._database.connect()
+            .then((_: boolean) => console.log('Connected to db!'))
             .catch(error => console.log(error));
     }
 
@@ -61,4 +65,18 @@ export class Luna {
 
     public readonly addListener = (listener: () => void): void => { listener(); }
 
+    public readonly getFakeDate = (): Date => this._database.getFakeDate();
+    public readonly setFakeDate = (): void => this._database.setFakeDate();
+    public readonly updateFakeList = async (animeList: Array<AnimeRecord>): Promise<boolean> =>
+        new Promise((resolve, reject) => {
+            this._database.updateFakeList(animeList)
+                .then(_ => resolve(true))
+                .catch((error: Error) => reject(error));
+        });
+    public readonly getFakeList = async (): Promise<Array<AnimeRecord>> =>
+        new Promise((resolve, reject) => {
+            this._database.getFakeList()
+                .then((fakeList: Array<AnimeRecord>) => resolve(fakeList))
+                .catch((error: Error) => reject(error));
+        })
 }

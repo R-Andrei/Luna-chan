@@ -10,7 +10,7 @@ class Gif extends Ability {
     public readonly description: string = 'Sends poor quality jifs.';
     public readonly args: boolean = true;
     public readonly min_args: number = 1;
-    public readonly usage: string = '<tags> <*separated by spaces>';
+    public readonly usage: string = '<tags> (separated by spaces)';
     public readonly type: AbilityType = EveryoneActive;
     public readonly alias: Array<string> = ['jif', 'movingimage', 'anime'];
     public readonly execute = async (message: Message, _instance: Luna, ...args: string[]): Promise<Message | Message[]> => {
