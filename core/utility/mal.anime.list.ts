@@ -10,6 +10,16 @@ const headers = {
 
 const baseUrl = 'https://myanimelist.net';
 
+export const gradeTranslator = (grade: number): string => {
+    if (grade >= 9.5)
+        return 'perfect';
+    else if (grade < 9.5 && grade > 8)
+        return 'good';
+    else if (grade < 8 && grade > 7)
+        return 'neutral';
+    else
+        return 'bad';
+}
 
 export const getAnimeList = async (args: string[]): Promise<Array<AnimeRecord>> =>
     new Promise((resolve, reject) => {

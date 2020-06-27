@@ -1,12 +1,11 @@
 import { Channel, TextChannel, Message, Client, Collection } from 'discord.js';
 
 import { Ability } from '../abilities/template.ability.js';
-import { c_errors } from '../utility/condescending.phrases';
-import { i_errors } from '../utility/interrogative.phrases';
 import { random } from '../utility/numbers';
 import { Listener } from './template.listener.js';
-import { prefix, settings } from '../prefixes.json'
-import { Luna } from '../luna'
+import { prefix, settings } from '../prefixes.json';
+import phrases from '../../phrases';
+import { Luna } from '../luna';
 
 
 class MessageAdd extends Listener {
@@ -43,6 +42,8 @@ class MessageAdd extends Listener {
 
     public readonly execute = (instance: Luna, command: string, args: string[], message: Message): void => {
 
+        const { disgusted, inquisitive } = phrases;
+
         // @ts-ignore
         const abilities: Collection<Ability> = instance.get(this, 'ability');
         const ability: Ability | null = abilities.get(command) || abilities.find((item: Ability) => item.alias && item.alias.includes(command));
@@ -51,8 +52,8 @@ class MessageAdd extends Listener {
             const target_channel: Channel = message.client.channels.get(message.channel.id)
 
             if (args.length < ability.min_args) {
-                const c_pos: number = random(0, c_errors.length - 1);
-                (target_channel as TextChannel).send(c_errors[c_pos])
+                const disgusted_pos: number = random(0, disgusted.errors.length - 1);
+                (target_channel as TextChannel).send(disgusted.errors[disgusted_pos])
                     .then((_sent: Message) => {
                         instance.logger.logAbility(message, ability, new Error(`Argument Error: missing arguments. Got ${args.length} out of ${ability.min_args}.`));
                         (target_channel as TextChannel).send(`You're supposed to be using it like this: ${prefix}${ability.name} ${ability.usage}`);
@@ -69,8 +70,8 @@ class MessageAdd extends Listener {
                     .catch((error: Error) => {
                         console.log(error);
                         instance.logger.logAbility(message, ability, error);
-                        const i_pos: number = random(0, i_errors.length - 1);
-                        (target_channel as TextChannel).send(`${i_errors[i_pos]} That didn't work out.`)
+                        const inquisitive_pos: number = random(0, inquisitive.errors.length - 1);
+                        (target_channel as TextChannel).send(`${inquisitive.errors[inquisitive_pos]} That didn't work out.`)
                             .then((_sent: Message) => {
                                 (target_channel as TextChannel).send(`Sure you were using it like this? ${prefix}${ability.name} ${ability.usage}`);
                             })

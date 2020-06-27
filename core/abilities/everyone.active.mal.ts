@@ -1,12 +1,12 @@
 
 import { Message, Channel, TextChannel } from 'discord.js';
 
-import { starters, judging } from '../utility/everyone.active.mal.phrases';
 import { AbilityType, EveryoneActive, AnimeRecord } from '../types';
-import { getAnimeList, compareAnimeLists } from '../utility/mal.anime.list';
+import { getAnimeList, compareAnimeLists, gradeTranslator } from '../utility/mal.anime.list';
 import { random } from '../utility/numbers';
 import { Ability } from './template.ability';
 import { Luna } from '../luna';
+import phrases from '../../phrases';
 
 
 class Tastecheck extends Ability {
@@ -20,13 +20,18 @@ class Tastecheck extends Ability {
     public readonly execute = async (message: Message, instance: Luna, ...args: string[]): Promise<Message | Message[]> => {
         return new Promise((resolve, reject) => {
 
-            const s_pos: number = random(0, starters.length - 1);
+            const { mal } = phrases;
+
+            const starter_pos: number = random(0, mal.starters.length - 1);
             const channel: Channel = message.client.channels.get(message.channel.id);
-            (channel as TextChannel).send(starters[s_pos])
+            (channel as TextChannel).send(mal.starters[starter_pos])
                 .catch((error: Error) => reject(error));
 
             instance.getFakeList()
                 .then((fakeList: Array<AnimeRecord>) => {
+                    const middler_pos: number = random(0, mal.middlers.length - 1);
+                    (channel as TextChannel).send(mal.middlers[middler_pos])
+                        .catch((err: Error) => reject(err));
                     const now: Date = new Date();
                     if (Math.abs(now.getTime() - instance.getFakeDate().getTime()) * 1000.0 * 60.0 * 60.0 * 24.0 >= 1.0) {
                         getAnimeList(['Fake-'])
@@ -40,21 +45,25 @@ class Tastecheck extends Ability {
                             })
                             .catch((error: Error) => reject(error));
                     }
-                    else
-                        getAnimeList(args)
-                            .then((response: Array<AnimeRecord>) => {
+                    getAnimeList(args)
+                        .then((response: Array<AnimeRecord>) => {
 
-                                const j_pos: number = random(0, judging.length - 1);
-                                (channel as TextChannel).send(judging[j_pos])
-                                    .catch((err: Error) => reject(err));
+                            const grade: number = compareAnimeLists(fakeList, response);
 
-                                const grade: number = compareAnimeLists(fakeList, response);
+                            const feeling: string = gradeTranslator(grade);
 
-                                (channel as TextChannel).send(`mmm. it's a ${grade.toFixed(1)}`)
-                                    .then((sent: Message) => resolve(sent))
-                                    .catch((err: Error) => reject(err));
-                            })
-                            .catch((error: Error) => reject(error));
+                            console.log('here', feeling, grade);
+
+                            const finisher_pos: number = random(0, mal.finishers[feeling].length - 1);
+                            const channel: Channel = message.client.channels.get(message.channel.id);
+                            (channel as TextChannel).send(mal.finishers[feeling][finisher_pos])
+                                .catch((error: Error) => reject(error));
+
+                            (channel as TextChannel).send(`mmm. it's a ${grade.toFixed(1)}`)
+                                .then((sent: Message) => resolve(sent))
+                                .catch((err: Error) => reject(err));
+                        })
+                        .catch((error: Error) => reject(error));
                 })
         });
     }

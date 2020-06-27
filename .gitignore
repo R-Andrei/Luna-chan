@@ -3,6 +3,8 @@ compiled/
 core/logging/db/
 node_modules/
 .vscode/
+phrases/*.json
 
+test.*
 *.yml
 .env
