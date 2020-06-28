@@ -55,6 +55,7 @@ class MessageAdd extends Listener {
                 const disgusted_pos: number = random(0, disgusted.errors.length - 1);
                 (target_channel as TextChannel).send(disgusted.errors[disgusted_pos])
                     .then((_sent: Message) => {
+                        console.log('Argument error.');
                         instance.logger.logAbility(message, ability, new Error(`Argument Error: missing arguments. Got ${args.length} out of ${ability.min_args}.`));
                         (target_channel as TextChannel).send(`You're supposed to be using it like this: ${prefix}${ability.name} ${ability.usage}`);
                     })

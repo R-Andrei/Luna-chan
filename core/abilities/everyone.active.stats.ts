@@ -6,10 +6,11 @@ import { Luna } from '../luna';
 
 class Stats extends Ability {
     public readonly name: string = 'stats';
+    public readonly prefix: string = '!';
     public readonly description: string = 'Sends an invite link for awesome Luna.';
     public readonly args: boolean = true;
     public readonly min_args: number = 1;
-    public readonly usage: string = '@user_mention, or just !stats';
+    public readonly usage: string = '(optional) <@user_mention>';
     public readonly type: AbilityType = GuildActive;
     public readonly alias: Array<string> = ['info', 'me', 'statsme', 'infome', 'profile'];
     public readonly execute = async (message: Message, instance: Luna, ...args: string[]): Promise<Message | Message[]> => {

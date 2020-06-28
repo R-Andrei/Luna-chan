@@ -65,6 +65,13 @@ export const GuildPassive: AbilityType = {
     active: false
 }
 
+export interface SimplifiedAbility {
+    name: string,
+    prefix: string,
+    usage: string,
+    type: AbilityType
+}
+
 
 // logging
 export interface LogRecord {

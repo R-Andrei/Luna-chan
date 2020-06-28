@@ -5,6 +5,7 @@ import { Luna } from '../luna';
 
 class Invite extends Ability {
     public readonly name: string = 'invite';
+    public readonly prefix: string = '!';
     public readonly description: string = 'Sends an invite link for awesome Luna.';
     public readonly args: boolean = false;
     public readonly min_args: number = 0;

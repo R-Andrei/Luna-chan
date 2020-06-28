@@ -7,6 +7,7 @@ import { Luna } from '../luna';
 
 class Hitme extends Ability {
     public readonly name: string = 'hitme';
+    public readonly prefix: string = '!';
     public readonly description: string = 'Basically a shitpost in joke format.';
     public readonly args: boolean = false;
     public readonly min_args: number = 0;

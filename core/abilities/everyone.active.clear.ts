@@ -5,6 +5,7 @@ import { Luna } from '../luna';
 
 class Clear extends Ability {
     public readonly name: string = 'clear';
+    public readonly prefix: string = '!';
     public readonly description: string = 'Clears messages in a channel.';
     public readonly args: boolean = true;
     public readonly min_args: number = 1;

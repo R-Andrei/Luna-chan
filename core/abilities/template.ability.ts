@@ -4,6 +4,7 @@ import { Luna } from '../luna';
 
 export class Ability {
     public readonly name: string;
+    public readonly prefix: string;
     public readonly description: string;
     public readonly args: boolean;
     public readonly min_args: number;

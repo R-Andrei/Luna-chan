@@ -7,6 +7,7 @@ import { Luna } from '../luna';
 
 class Gif extends Ability {
     public readonly name: string = 'gif';
+    public readonly prefix: string = '!';
     public readonly description: string = 'Sends poor quality jifs.';
     public readonly args: boolean = true;
     public readonly min_args: number = 1;

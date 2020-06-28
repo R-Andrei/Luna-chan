@@ -1,7 +1,7 @@
 import { Client, Collection, Snowflake } from 'discord.js';
 import { readdirSync } from 'fs';
 
-import { AnimeRecord } from './types';
+import { AnimeRecord, SimplifiedAbility } from './types';
 import { Listener } from './listeners/template.listener';
 import { Ability } from './abilities/template.ability';
 import { Authorize, Validate } from './luna.decorators';
@@ -79,4 +79,13 @@ export class Luna {
                 .then((fakeList: Array<AnimeRecord>) => resolve(fakeList))
                 .catch((error: Error) => reject(error));
         })
+
+    public readonly getSimplifiedAbilities = (): Array<SimplifiedAbility> => this._abilities.map((ability: Ability) => {
+        return {
+            name: ability.name,
+            prefix: ability.prefix,
+            usage: ability.usage,
+            type: ability.type
+        };
+    })
 }

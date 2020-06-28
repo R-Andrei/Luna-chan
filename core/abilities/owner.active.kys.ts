@@ -5,6 +5,7 @@ import { Luna } from '../luna';
 
 class Kys extends Ability {
     public readonly name: string = 'kys';
+    public readonly prefix: string = '!';
     public readonly description: string = 'makes Luna kill self';
     public readonly args: boolean = false;
     public readonly min_args: number = 0;

@@ -11,6 +11,7 @@ import phrases from '../../phrases';
 
 class Tastecheck extends Ability {
     public readonly name: string = 'tastecheck';
+    public readonly prefix: string = '!';
     public readonly description: string = 'Checks the taste in anime of the given poor victim.';
     public readonly args: boolean = true;
     public readonly min_args: number = 1;
@@ -22,15 +23,13 @@ class Tastecheck extends Ability {
 
             const { mal } = phrases;
 
-            const starter_pos: number = random(0, mal.starters.length - 1);
             const channel: Channel = message.client.channels.get(message.channel.id);
-            (channel as TextChannel).send(mal.starters[starter_pos])
+            (channel as TextChannel).send(mal.starters[random(0, mal.starters.length - 1)])
                 .catch((error: Error) => reject(error));
 
             instance.getFakeList()
                 .then((fakeList: Array<AnimeRecord>) => {
-                    const middler_pos: number = random(0, mal.middlers.length - 1);
-                    (channel as TextChannel).send(mal.middlers[middler_pos])
+                    (channel as TextChannel).send(mal.middlers[random(0, mal.middlers.length - 1)])
                         .catch((err: Error) => reject(err));
                     const now: Date = new Date();
                     if (Math.abs(now.getTime() - instance.getFakeDate().getTime()) * 1000.0 * 60.0 * 60.0 * 24.0 >= 1.0) {
@@ -49,17 +48,15 @@ class Tastecheck extends Ability {
                         .then((response: Array<AnimeRecord>) => {
 
                             const grade: number = compareAnimeLists(fakeList, response);
-
                             const feeling: string = gradeTranslator(grade);
 
-                            console.log('here', feeling, grade);
-
-                            const finisher_pos: number = random(0, mal.finishers[feeling].length - 1);
                             const channel: Channel = message.client.channels.get(message.channel.id);
-                            (channel as TextChannel).send(mal.finishers[feeling][finisher_pos])
+                            (channel as TextChannel).send(mal.finishers[feeling][random(0, mal.finishers[feeling].length - 1)])
                                 .catch((error: Error) => reject(error));
 
-                            (channel as TextChannel).send(`mmm. it's a ${grade.toFixed(1)}`)
+                            // comment on specific anime function
+
+                            (channel as TextChannel).send(mal.verdict[feeling][random(0, mal.verdict[feeling].length - 1)])
                                 .then((sent: Message) => resolve(sent))
                                 .catch((err: Error) => reject(err));
                         })
