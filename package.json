@@ -29,7 +29,7 @@
         "discord.js": "^11.5.1",
         "dotenv": "^8.2.0",
         "fs": "0.0.1-security",
-        "moment": "^2.24.0",
+        "moment": "^2.29.4",
         "mongodb": "^3.5.9",
         "request": "^2.88.0",
         "request-promise": "^4.2.4",
